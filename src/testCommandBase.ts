@@ -1,16 +1,18 @@
 import { CommandBase } from "./commandBase";
 import { Logger } from "./utils/logger";
 import { Validator } from "./utils/validator";
+import { VariableCache } from "./utils/variableCache";
 import * as request from "./request";
+
 
 import { env } from "process";
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 
 export abstract class TestCommandBase extends CommandBase {
     protected extractVariables(
-        variables: Map<String, String>,
+        variables: Map<string, string>,
         result: object,
-        variablesCfg: Map<String, String>
+        variablesCfg: Map<string, string>
     ): void {
         if (variablesCfg) {
             const vars = new Map(Object.entries(variablesCfg));
@@ -22,7 +24,7 @@ export abstract class TestCommandBase extends CommandBase {
             });
         }
     }
-    protected dumpVariables(variables: Map<String, String>): void {
+    protected dumpVariables(id: string, variables: Map<string, string>): void {
         const envKeys = [...Object.keys(env)];
         const keepKeys = [...variables.keys()].filter(
             (k) => envKeys.indexOf(k as string) === -1
@@ -30,8 +32,8 @@ export abstract class TestCommandBase extends CommandBase {
         const dict = keepKeys.reduce((a, c) => {
             a.set(c, variables.get(c) as string);
             return a;
-        }, new Map<String, String>());
-        Logger.log(JSON.stringify(Object.fromEntries(dict), null, 2));
+        }, new Map<string, string>());
+        VariableCache.store(id, dict);
     }
     protected validate(result: object, validations: request.RequestItemValidation[]): void {
         if (validations) {

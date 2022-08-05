@@ -7,4 +7,7 @@ export class JSONUtils {
         }
         return JSON.parse(fs.readFileSync(path, "utf-8"));
     }
+    static toFile(json: object, path: string): void {
+        fs.writeFileSync(path, JSON.stringify(json, null, 4));
+    }
 }

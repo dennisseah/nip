@@ -32,18 +32,19 @@ export interface RequestItemValidation {
 export interface RequestItem {
     name: string;
     request: RequestItemRequest;
-    variables: Map<String, String>;
+    variables: Map<string, string>;
     poll: RequestItemPoll;
     validations: RequestItemValidation[];
 }
 
 export interface RequestAuthentication {
-    apiKeys?: Map<String, String>;
+    apiKeys?: Map<string, string>;
 }
 
 export interface Request {
+    id?: string;
     steps: RequestItem[];
     teardowns: RequestItem[];
     authentication: RequestAuthentication;
-    variables: Map<String, String>;
+    variables: Map<string, string>;
 }

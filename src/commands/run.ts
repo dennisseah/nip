@@ -2,9 +2,10 @@ import { Command } from "commander";
 import { CommandHandler } from "../commandHandler";
 import { Helper } from "../utils/helper";
 import { HttpRequestHelper } from "../utils/httpRequestHelper";
-import { JSONUtils } from "../utils/jsonUtils";
 import { Logger } from "../utils/logger";
+import { RequestFile } from "../utils/requestFile";
 import { StringUtils } from "../utils/stringUtils";
+import { VariableCache } from "../utils/variableCache";
 
 import * as request from "../request";
 import * as path from "path";
@@ -25,11 +26,12 @@ export class Run extends TestCommandBase implements CommandHandler {
         const filename = this.subCmd!.opts().filename;
         const teardown = this.subCmd!.opts().teardown;
 
-        const fp = path.join(this.getDataDir(), filename);
-        const data = JSONUtils.fromFile(fp) as request.Request;
+        const data = RequestFile.fetch(path.join(this.getDataDir(), filename));
 
         data.variables = new Map(Object.entries(data.variables));
         Object.keys(env).forEach((k) => data.variables.set(k, env[k]!.toString()));
+        const cachedVariables = VariableCache.fetch(data.id);
+        [...cachedVariables.keys()].forEach((k) => data.variables.set(k, cachedVariables.get(k)!));
 
         if (data.authentication.apiKeys) {
             data.authentication.apiKeys = new Map(Object.entries(data.authentication.apiKeys));
@@ -40,11 +42,11 @@ export class Run extends TestCommandBase implements CommandHandler {
         return Promise.mapSeries(steps, (item: request.RequestItem) => this.createStep(item, data, teardown))
             .then(() => {
                 Logger.log("completed all the steps");
-                this.dumpVariables(data.variables);
+                this.dumpVariables(data.id!, data.variables);
             })
             .catch((rejection) => {
                 console.error(`Fail to run all the steps, ${rejection}`);
-                this.dumpVariables(data.variables);
+                this.dumpVariables(data.id!, data.variables);
             });
     }
     private async createStep(item: request.RequestItem, data: request.Request, ignoreError: boolean = false): Promise<string> {
@@ -85,7 +87,7 @@ export class Run extends TestCommandBase implements CommandHandler {
     private makeRequest(
         item: request.RequestItem,
         authentication: request.RequestAuthentication,
-        variables: Map<String, String>
+        variables: Map<string, string>
     ): Promise<object> {
         const url = new URL(StringUtils.fillTokens(item.request.url, variables));
         const headers = item.request.headers ? new Map(Object.entries(item.request.headers)) : new Map<String, String | Number>();

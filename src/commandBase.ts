@@ -33,7 +33,6 @@ export abstract class CommandBase {
             Logger.setLevel(this.subCmd!.opts().loglevel);
             Logger.debug(`executing ${this.name} command.`);
             this.dataDir = this.subCmd!.opts().datadir;
-
             await this.doAction();
         } finally {
             const end = new Date().getTime();
