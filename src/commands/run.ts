@@ -33,7 +33,7 @@ export class Run extends TestCommandBase implements CommandHandler {
         const cachedVariables = VariableCache.fetch(data.id);
         [...cachedVariables.keys()].forEach((k) => data.variables.set(k, cachedVariables.get(k)!));
 
-        if (data.authentication.apiKeys) {
+        if (data.authentication && data.authentication.apiKeys) {
             data.authentication.apiKeys = new Map(Object.entries(data.authentication.apiKeys));
         }
 
@@ -92,7 +92,7 @@ export class Run extends TestCommandBase implements CommandHandler {
         const url = new URL(StringUtils.fillTokens(item.request.url, variables));
         const headers = item.request.headers ? new Map(Object.entries(item.request.headers)) : new Map<String, String | Number>();
 
-        if (authentication.apiKeys) {
+        if (authentication && authentication.apiKeys) {
             const apiKeys = authentication.apiKeys;
             [...apiKeys.keys()].forEach((k) =>
                 headers.set(

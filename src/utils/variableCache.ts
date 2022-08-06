@@ -3,6 +3,7 @@ import * as path from "path";
 import * as os from "os";
 
 import { JSONUtils } from "./jsonUtils";
+import { Logger } from "./logger";
 
 export class VariableCache {
     private static FOLDER_NAME = ".nip_cache";
@@ -24,6 +25,7 @@ export class VariableCache {
             this.createCacheDirectory();
             const fp = path.join(os.homedir(), this.FOLDER_NAME, id);
             JSONUtils.toFile(Object.fromEntries(data), fp);
+            Logger.debug(JSON.stringify(Object.fromEntries(data), null, 4));
         }
     }
 

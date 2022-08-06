@@ -17,4 +17,16 @@ defining
 1. check out the source code.
 1. `cd nip; yarn install --ignore-engines` 
 
+### Package
 
+run `npm run package` and then `nip` executable with be created. (for MacOS)
+
+|    command | description                                                 |
+| ---------: | ----------------------------------------------------------- |
+| `nip list` | to list all the data file.                                   |
+|  `nip run` | to execute data file. `nip run --help` for more information. |
+
+The schema for the data file is a [schema.json](./schema.json)
+### Development
+
+`ts-node src/cli.ts run -f sample.json`

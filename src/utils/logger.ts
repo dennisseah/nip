@@ -26,17 +26,20 @@ export class Logger {
     }
     static log(message: string): void {
         if (this.level !== LogLevel.OFF) {
-            console.log(message);
+            console.log(`\x1b[32m${message}\x1b[89m`);
+            console.log("\x1b[0m");
         }
     }
     static debug(message: string): void {
         if (this.level === LogLevel.DEBUG) {
-            console.log(message);
+            console.log(`\x1b[33m${message}\x1b[89m`);
+            console.log("\x1b[0m");
         }
     }
     static error(message: string): void {
         if (this.level !== LogLevel.OFF) {
-            console.log(message);
+            console.log(`\x1b[31m${message}\x1b[89m`);
+            console.log("\x1b[0m");
         }
     }
 }

@@ -76,11 +76,10 @@ export class HttpRequestHelper {
                 });
 
                 res.on("end", () => {
-                    const contentType = res.headers["content-type"] || "";
+                    const contentTypes = (res.headers["content-type"] || "").split(";").map(s => s.toLowerCase());
+
                     resolve(
-                        contentType.toLowerCase() === "application/json"
-                            ? JSON.parse(body)
-                            : body
+                        contentTypes.indexOf("application/json") !== -1 ? JSON.parse(body) : body
                     );
                 });
             });

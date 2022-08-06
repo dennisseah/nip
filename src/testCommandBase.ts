@@ -41,6 +41,12 @@ export abstract class TestCommandBase extends CommandBase {
                 if (validation.type === "validateMapValues") {
                     const params = validation.parameters as request.ValidateMapValuesParameters;
                     Validator.validateMapValues(result, params.path, params.valuePath, params.expectedVal, params.all);
+                } else if (validation.type === "validateStringValue") {
+                    const params = validation.parameters as request.ValidateStringValueParameters;
+                    Validator.validateStringValue(result, params.path, params.expectedVal);
+                } else if (validation.type === "validateArraySize") {
+                    const params = validation.parameters as request.ValidateArraySizeParameters;
+                    Validator.validateArraySize(result, params.path, params.expectedVal);
                 } else if (validation.type === "validateExist") {
                     const params = validation.parameters as request.ValidateExistParameters;
                     Validator.validateExist(result, params.path);

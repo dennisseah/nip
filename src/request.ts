@@ -13,6 +13,16 @@ export interface RequestItemPoll {
     path?: string;
 }
 
+export interface ValidateStringValueParameters {
+    path: string;
+    expectedVal: string;
+}
+
+export interface ValidateArraySizeParameters {
+    path: string;
+    expectedVal: number;
+}
+
 export interface ValidateMapValuesParameters {
     path: string;
     valuePath: string;
@@ -25,8 +35,8 @@ export interface ValidateExistParameters {
 }
 
 export interface RequestItemValidation {
-    type: "validateMapValues" | "validateExist";
-    parameters: ValidateMapValuesParameters | ValidateExistParameters;
+    type: "validateMapValues" | "validateStringValue" | "validateArraySize" | "validateExist";
+    parameters: ValidateMapValuesParameters | ValidateStringValueParameters | validateArraySizeParameters | ValidateExistParameters;
 }
 
 export interface RequestItem {

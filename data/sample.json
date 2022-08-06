@@ -1,0 +1,43 @@
+{
+    "steps": [
+        {
+            "name": "Fetch Products",
+            "request": {
+                "url": "{{host}}/V4/Northwind/Northwind.svc/Products",
+                "method": "GET"
+            },
+            "validations": [
+                {
+                    "type": "validateArraySize",
+                    "parameters": {
+                        "path": "$.[value]",
+                        "expectedVal": 20
+                    }
+                }
+            ],
+            "variables": {
+                "first_product": "$.[value][0][ProductID]"
+            }
+        },
+        {
+            "name": "Fetch First Product",
+            "request": {
+                "url": "{{host}}/V4/Northwind/Northwind.svc/Products({{first_product}})",
+                "method": "GET"
+            },
+            "validations": [
+                {
+                    "type": "validateStringValue",
+                    "parameters": {
+                        "path": "$.[ProductName]",
+                        "expectedVal": "Chai"
+                    }
+                }
+            ]
+        }
+    ],
+    "variables": {
+        "host": "https://services.odata.org"
+    },
+    "id": "bc9ebaa6-d012-4074-9b8c-f76ec903d95e"
+}

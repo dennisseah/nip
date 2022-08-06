@@ -1,0 +1,98 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "steps": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/step" }
+        },
+        "teardowns": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/step" }
+        },
+        "authentication": {
+            "type": "object",
+            "properties": {
+                "apiKeys": {
+                    "type": "object",
+                    "additionalProperties": { "type": "string" }
+                }
+            }
+        },
+        "variables": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+        }
+    },
+    "required": ["steps"],
+
+    "definitions": {
+        "step": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "request": {
+                    "$ref": "#/definitions/step-request"
+                },
+                "variables": {
+                    "type": "object",
+                    "additionalProperties": { "type": "string" }
+                }
+            },
+            "required": ["name", "request"]
+        },
+        "step-request": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "parameters": {
+                    "type": "object",
+                    "additionalProperties": { "type": "string" }
+                },
+                "json": {},
+                "poll": {
+                    "$ref": "#/definitions/step-poll"
+                },
+                "validations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/step-validation"
+                    }
+                }
+            },
+            "required": ["url", "method"]
+        },
+        "step-poll": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                }
+            },
+            "required": ["type"]
+        },
+        "step-validation": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "parameters": {}
+            },
+            "required": ["type", "parameters"]
+        }
+    }
+}
