@@ -19,19 +19,26 @@ export class Run extends TestCommandBase implements CommandHandler {
     }
     protected addOptions(cmd: Command): Command {
         return super.addOptions(cmd)
-            .option("-f --filename <filename>", 'test file name.', false)
+            .option("-f --filename <filename>", 'test file name.')
+            .option("-r --restart", "restart test run, that's do not use previous run variables.", false)
             .option("-t --teardown", 'run tear down steps.', false);
     }
     protected async doAction(): Promise<void> {
         const filename = this.subCmd!.opts().filename;
         const teardown = this.subCmd!.opts().teardown;
+        const restart = this.subCmd!.opts().restart;
 
         const data = RequestFile.fetch(path.join(this.getDataDir(), filename));
 
         data.variables = new Map(Object.entries(data.variables));
         Object.keys(env).forEach((k) => data.variables.set(k, env[k]!.toString()));
-        const cachedVariables = VariableCache.fetch(data.id);
-        [...cachedVariables.keys()].forEach((k) => data.variables.set(k, cachedVariables.get(k)!));
+        
+        if (!restart) {
+            const cachedVariables = VariableCache.fetch(data.id);
+            [...cachedVariables.keys()].forEach((k) => data.variables.set(k, cachedVariables.get(k)!));
+        } else {
+            VariableCache.clear(data.id);
+        }
 
         if (data.authentication && data.authentication.apiKeys) {
             data.authentication.apiKeys = new Map(Object.entries(data.authentication.apiKeys));

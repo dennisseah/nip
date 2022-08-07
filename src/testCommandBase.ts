@@ -44,6 +44,9 @@ export abstract class TestCommandBase extends CommandBase {
                 } else if (validation.type === "validateStringValue") {
                     const params = validation.parameters as request.ValidateStringValueParameters;
                     Validator.validateStringValue(result, params.path, params.expectedVal);
+                } else if (validation.type === "validateNumericValue") {
+                    const params = validation.parameters as request.ValidateNumericValueParameters;
+                    Validator.validateNumericValue(result, params.path, params.expectedVal);
                 } else if (validation.type === "validateArraySize") {
                     const params = validation.parameters as request.ValidateArraySizeParameters;
                     Validator.validateArraySize(result, params.path, params.expectedVal);

@@ -20,6 +20,25 @@
             }
         },
         {
+            "name": "Fetch next list of Products",
+            "request": {
+                "url": "{{host}}/V4/Northwind/Northwind.svc/Products",
+                "method": "GET",
+                "parameters": {
+                    "$skiptoken": 20
+                }
+            },
+            "validations": [
+                {
+                    "type": "validateNumericValue",
+                    "parameters": {
+                        "path": "$.[value][0][ProductID]",
+                        "expectedVal": 21
+                    }
+                }
+            ]
+        },
+        {
             "name": "Fetch First Product",
             "request": {
                 "url": "{{host}}/V4/Northwind/Northwind.svc/Products({{first_product}})",

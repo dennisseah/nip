@@ -57,7 +57,7 @@
                 },
                 "parameters": {
                     "type": "object",
-                    "additionalProperties": { "type": "string" }
+                    "additionalProperties": { "type": ["string", "number"] }
                 },
                 "json": {},
                 "poll": {

@@ -3,8 +3,8 @@ export type HttpTypes = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface RequestItemRequest {
     url: string;
     method: HttpTypes;
-    headers: Map<String, String | Number>;
-    parameters?: Map<String, String | Number>;
+    headers: Map<string, string | number>;
+    parameters?: Map<string, string | number>;
     json?: object;
 }
 
@@ -16,6 +16,11 @@ export interface RequestItemPoll {
 export interface ValidateStringValueParameters {
     path: string;
     expectedVal: string;
+}
+
+export interface ValidateNumericValueParameters {
+    path: string;
+    expectedVal: number;
 }
 
 export interface ValidateArraySizeParameters {
@@ -35,8 +40,18 @@ export interface ValidateExistParameters {
 }
 
 export interface RequestItemValidation {
-    type: "validateMapValues" | "validateStringValue" | "validateArraySize" | "validateExist";
-    parameters: ValidateMapValuesParameters | ValidateStringValueParameters | validateArraySizeParameters | ValidateExistParameters;
+    type:
+        | "validateMapValues"
+        | "validateStringValue"
+        | "validateNumericValue"
+        | "validateArraySize"
+        | "validateExist";
+    parameters:
+        | ValidateMapValuesParameters
+        | ValidateStringValueParameters
+        | ValidateNumericValueParameters
+        | ValidateArraySizeParameters
+        | ValidateExistParameters;
 }
 
 export interface RequestItem {

@@ -10,7 +10,19 @@ export class Validator {
         const test = target[0] as string;
 
         if (test !== expectedVal) {
-            throw new Error("validateStringValue function failed");
+            throw new Error(`validateStringValue function failed. expected ${expectedVal} but got ${test}`);
+        }
+    }
+    static validateNumericValue(obj: object, path: string, expectedVal: number) {
+        const target = JSONPath({ path: path, json: obj } as JSONPathOptions);
+        if (target.length === 0) {
+            throw new Error("validateNumericValue function failed");
+        }
+
+        const test = target[0] as number;
+
+        if (test !== expectedVal) {
+            throw new Error(`validateNumericValue function failed. expected ${expectedVal} but got ${test}`);
         }
     }
     static validateArraySize(obj: object, path: string, expectedVal: number) {
