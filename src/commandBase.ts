@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { Logger } from "./utils/logger";
+import { Logger, LogLevel } from "./utils/logger";
 
 import * as path from "path";
 
@@ -13,7 +13,8 @@ export abstract class CommandBase {
         this.subCmd = parent.command(name).action(() => this.action());
         this.subCmd.option(
             "-l --loglevel <logLevel>",
-            "log level. off, debug, info, error."
+            "log level. off, debug, info, error.",
+            "info"
         ).option(
             "-d --datadir <datadir>",
             "data folder name."
@@ -26,23 +27,28 @@ export abstract class CommandBase {
         return cmd;
     }
 
-    protected async action(): Promise<void> {
+    protected action(): void {
         const start = new Date().getTime();
+        const cmdOpts = this.subCmd!.opts();
 
-        try {
-            Logger.setLevel(this.subCmd!.opts().loglevel);
-            Logger.debug(`executing ${this.name} command.`);
-            this.dataDir = this.subCmd!.opts().datadir;
-            await this.doAction();
-        } finally {
-            const end = new Date().getTime();
-            Logger.log(`\ntime taken: ${Math.ceil((end - start) / 6000)} minutes.`);
-        }
+        (async () => {
+            try {
+                Logger.setLevel(Logger.parseLevel(cmdOpts.loglevel));
+                Logger.debug(`executing ${this.name} command.`);
+                this.dataDir = cmdOpts.datadir;
+                await this.doAction();
+            } catch (ex) {
+                Logger.error((ex as Error).message);
+            } finally {
+                const end = new Date().getTime();
+                Logger.log(`\ntime taken: ${Math.ceil((end - start) / 6000)} minutes.`);
+            }
+        })();
     }
 
     protected getDataDir(): string {
         return this.dataDir || path.join(".", "data");
     }
 
-    protected abstract doAction(): void;
+    protected abstract doAction(): Promise<void>;
 }
