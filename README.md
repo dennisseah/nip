@@ -19,7 +19,7 @@ defining
 
 ### Package
 
-run `npm run package` and then `nip` executable with be created. (for MacOS)
+run `yarn run package` and then `nip` executable with be created. (for MacOS)
 
 |    command | description                                                 |
 | ---------: | ----------------------------------------------------------- |
@@ -30,3 +30,5 @@ The schema for the data file is a [schema.json](./schema.json)
 ### Development
 
 `ts-node src/cli.ts run -f sample.json`
+
+run unit test `yarn run coverage`.
