@@ -6,7 +6,7 @@ export class HttpRequestHelper {
     static async makeGETRequest(
         name: string,
         url: URL,
-        headers: Map<String, String | Number>,
+        headers?: Map<String, String | Number>,
         parameters?: Map<String, String | Number>
     ): Promise<object> {
         return this.makeRequest(
@@ -17,7 +17,7 @@ export class HttpRequestHelper {
     static async makeDELETERequest(
         name: string,
         url: URL,
-        headers: Map<String, String | Number>,
+        headers?: Map<String, String | Number>,
         parameters?: Map<String, String | Number>
     ): Promise<object> {
         return this.makeRequest(
@@ -28,36 +28,37 @@ export class HttpRequestHelper {
     static async makePUTRequest(
         name: string,
         url: URL,
-        headers: Map<String, String | Number>,
         payload: string | undefined,
+        headers?: Map<String, String | Number>,
         parameters?: Map<String, String | Number>
     ): Promise<object> {
-        return this.makePOSTPUTRequest(name, "PUT", url, headers, payload, parameters);
+        return this.makePOSTPUTRequest(name, "PUT", url, payload, headers, parameters);
     }
     static async makePOSTRequest(
         name: string,
         url: URL,
-        headers: Map<String, String | Number>,
         payload: string | undefined,
+        headers?: Map<String, String | Number>,
         parameters?: Map<String, String | Number>
     ): Promise<object> {
-        return this.makePOSTPUTRequest(name, "POST", url, headers, payload, parameters);
+        return this.makePOSTPUTRequest(name, "POST", url, payload, headers, parameters);
     }
     private static async makePOSTPUTRequest(
         name: string,
         method: string,
         url: URL,
-        headers: Map<String, String | Number>,
         payload: string | undefined,
+        headers?: Map<String, String | Number>,
         parameters?: Map<String, String | Number>
     ): Promise<object> {
         if (payload) {
+            headers = headers || new Map<String, String>();
             headers.set("Content-Type", "application/json");
             headers.set("Content-Length", payload.length);
         }
         return this.makeRequest(name, this.createOptions(url, method, headers, parameters), payload);
     }
-    private static makeRequest(
+    private static async makeRequest(
         name: string,
         options: https.RequestOptions,
         payload?: string | undefined
@@ -102,7 +103,7 @@ export class HttpRequestHelper {
     private static createOptions(
         url: URL,
         method: string,
-        headers: Map<String, String | Number>,
+        headers?: Map<String, String | Number>,
         parameters?: Map<String, String | Number>
     ): https.RequestOptions {
         const options = {
@@ -111,7 +112,7 @@ export class HttpRequestHelper {
             path: url.pathname,
             method: method,
             rejectUnauthorized: false,
-            headers: Object.fromEntries(headers),
+            headers: headers ? Object.fromEntries(headers) : {},
         } as https.RequestOptions;
 
         if (parameters) {

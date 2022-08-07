@@ -113,10 +113,10 @@ export class Run extends TestCommandBase implements CommandHandler {
 
         if (item.request.method === "POST") {
             const payload = (item.request.json) ? StringUtils.fillTokens(JSON.stringify(item.request.json), variables) : undefined;
-            return HttpRequestHelper.makePOSTRequest(item.name, url, headers, payload, qParams);
+            return HttpRequestHelper.makePOSTRequest(item.name, url, payload, headers, qParams);
         } else if (item.request.method === "PUT") {
             const payload = (item.request.json) ? StringUtils.fillTokens(JSON.stringify(item.request.json), variables) : undefined;
-            return HttpRequestHelper.makePUTRequest(item.name, url, headers, payload, qParams);
+            return HttpRequestHelper.makePUTRequest(item.name, url, payload, headers, qParams);
         } else if (item.request.method === "DELETE") {
             return HttpRequestHelper.makeDELETERequest(item.name, url, headers, qParams);
         }
