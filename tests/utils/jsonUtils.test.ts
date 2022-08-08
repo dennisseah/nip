@@ -15,7 +15,7 @@ describe("JSONUtils fromFile positive unit test", () => {
 
     after(() => {
         sandbox.restore();
-    })
+    });
 
     it("Get JSON from a file then OK", async () => {
         const result = JSONUtils.fromFile(filename);
@@ -38,7 +38,6 @@ describe("JSONUtils toFile positive unit test", () => {
     });
 
     it("Save JSON to a file then OK", async () => {
-        
         JSONUtils.toFile(data, filename);
         sandbox.assert.calledOnce(cbSpy);
     });

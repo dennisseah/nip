@@ -6,7 +6,7 @@ import { JSONUtils } from "./jsonUtils";
 import { Logger } from "./logger";
 
 export class VariableCache {
-    private static FOLDER_NAME = ".nip_cache";
+    static FOLDER_NAME = ".nip_cache";
 
     static fetch(id: string | undefined): Map<string, string> {
         if (id) {
