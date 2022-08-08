@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import sinon, { SinonSandbox, SinonStub } from "sinon";
+import sinon, { SinonSandbox } from "sinon";
 import { RequestFile } from "../../src/utils/requestFile";
 import { JSONUtils } from "../../src/utils/jsonUtils";
 

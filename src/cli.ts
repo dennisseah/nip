@@ -14,6 +14,7 @@ const cmdFiles = fs
 
 cmdFiles.forEach((m) => {
     const className = m.substring(0, 1).toUpperCase() + m.substring(1);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const mod = require(`./commands/${m}`);
     const cmd = new mod[className]();
     cmd.register(program);

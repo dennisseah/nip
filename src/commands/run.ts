@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Command } from "commander";
 import { CommandHandler } from "../commandHandler";
 import { Helper } from "../utils/helper";
@@ -56,7 +58,7 @@ export class Run extends TestCommandBase implements CommandHandler {
                 this.dumpVariables(data.id!, data.variables);
             });
     }
-    private async createStep(item: request.RequestItem, data: request.Request, ignoreError: boolean = false): Promise<string> {
+    private async createStep(item: request.RequestItem, data: request.Request, ignoreError: boolean): Promise<string> {
         return new Promise((resolve, reject) => {
             (async () => {
                 try {
@@ -95,9 +97,9 @@ export class Run extends TestCommandBase implements CommandHandler {
         item: request.RequestItem,
         authentication: request.RequestAuthentication,
         variables: Map<string, string>
-    ): Promise<object> {
+    ): Promise<any> {
         const url = new URL(StringUtils.fillTokens(item.request.url, variables));
-        const headers = item.request.headers ? new Map(Object.entries(item.request.headers)) : new Map<String, String | Number>();
+        const headers = item.request.headers ? new Map(Object.entries(item.request.headers)) : new Map<string, string | number>();
 
         if (authentication && authentication.apiKeys) {
             const apiKeys = authentication.apiKeys;

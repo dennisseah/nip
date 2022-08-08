@@ -110,14 +110,11 @@ describe("VariableCache clear when cache does not exist unit test", () => {
 
 describe("VariableCache store unit test", () => {
     const sandbox: SinonSandbox = sinon.createSandbox();
-
-    let spyExistSync: SinonStub;
-    let spyUnlinkSync: SinonStub;
     let spyWriteFileSync: SinonStub;
 
     before(() => {
-        spyExistSync = sandbox.stub(fs, "existsSync").withArgs(cacheDir).returns(true);
-        spyUnlinkSync = sandbox.stub(fs, "unlinkSync").withArgs(filename);
+        sandbox.stub(fs, "existsSync").withArgs(cacheDir).returns(true);
+        sandbox.stub(fs, "unlinkSync").withArgs(filename);
         spyWriteFileSync = sandbox.stub(fs, "writeFileSync").withArgs(filename, sinon.match.string);
 
     });

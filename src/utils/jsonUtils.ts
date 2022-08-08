@@ -1,13 +1,15 @@
 import * as fs from "fs";
 
 export class JSONUtils {
-    static fromFile(path: string): object {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromFile(path: string): any {
         if (!fs.existsSync(path)) {
             throw new Error(`${path} did not exists`);
         }
         return JSON.parse(fs.readFileSync(path, "utf-8"));
     }
-    static toFile(json: object, path: string): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    static toFile(json: any, path: string): void {
         fs.writeFileSync(path, JSON.stringify(json, null, 4));
     }
 }

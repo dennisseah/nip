@@ -41,7 +41,7 @@ describe("Validator unit test", () => {
                 world: { errors: [] },
             },
         };
-        Validator.validateMapValues(data, "$.[values]", "$.errors", "[]");
+        Validator.validateMapValues(data, "$.[values]", "$.errors", "[]", true);
         expect(() => Validator.validateMapValues(data, "$.[values]", "$.errors", "[]", false)).to.throw(Error);
 
         const data2 = {
@@ -51,7 +51,7 @@ describe("Validator unit test", () => {
             },
         };
         Validator.validateMapValues(data2, "$.[values]", "$.errors", "[]", false);
-        expect(() => Validator.validateMapValues(data2, "$.[values]", "$.errors", "[]")).to.throw(Error);
+        expect(() => Validator.validateMapValues(data2, "$.[values]", "$.errors", "[]", true)).to.throw(Error);
     });
     it("validateExist test", () => {
         const data = { values: 1 };

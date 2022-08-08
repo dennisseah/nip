@@ -6,9 +6,10 @@ export class HttpRequestHelper {
     static async makeGETRequest(
         name: string,
         url: URL,
-        headers?: Map<String, String | Number>,
-        parameters?: Map<String, String | Number>
-    ): Promise<object> {
+        headers?: Map<string, string | number>,
+        parameters?: Map<string, string | number>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): Promise<any> {
         return this.makeRequest(
             name,
             this.createOptions(url, "GET", headers, parameters)
@@ -17,30 +18,30 @@ export class HttpRequestHelper {
     static async makeDELETERequest(
         name: string,
         url: URL,
-        headers?: Map<String, String | Number>,
-        parameters?: Map<String, String | Number>
-    ): Promise<object> {
-        return this.makeRequest(
-            name,
-            this.createOptions(url, "DELETE", headers, parameters)
-        );
+        headers?: Map<string, string | number>,
+        parameters?: Map<string, string | number>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): Promise<any> {
+        return this.makeRequest(name, this.createOptions(url, "DELETE", headers, parameters));
     }
     static async makePUTRequest(
         name: string,
         url: URL,
         payload: string | undefined,
-        headers?: Map<String, String | Number>,
-        parameters?: Map<String, String | Number>
-    ): Promise<object> {
+        headers?: Map<string, string | number>,
+        parameters?: Map<string, string | number>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): Promise<any> {
         return this.makePOSTPUTRequest(name, "PUT", url, payload, headers, parameters);
     }
     static async makePOSTRequest(
         name: string,
         url: URL,
         payload: string | undefined,
-        headers?: Map<String, String | Number>,
-        parameters?: Map<String, String | Number>
-    ): Promise<object> {
+        headers?: Map<string, string | number>,
+        parameters?: Map<string, string | number>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): Promise<any> {
         return this.makePOSTPUTRequest(name, "POST", url, payload, headers, parameters);
     }
     private static async makePOSTPUTRequest(
@@ -48,11 +49,12 @@ export class HttpRequestHelper {
         method: string,
         url: URL,
         payload: string | undefined,
-        headers?: Map<String, String | Number>,
-        parameters?: Map<String, String | Number>
-    ): Promise<object> {
+        headers?: Map<string, string | number>,
+        parameters?: Map<string, string | number>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): Promise<any> {
         if (payload) {
-            headers = headers || new Map<String, String>();
+            headers = headers || new Map<string, string>();
             headers.set("Content-Type", "application/json");
             headers.set("Content-Length", payload.length);
         }
@@ -62,8 +64,10 @@ export class HttpRequestHelper {
         name: string,
         options: https.RequestOptions,
         payload?: string | undefined
-    ): Promise<object> {
-        return new Promise<object>((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): Promise<any> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return new Promise<any>((resolve, reject) => {
             const req = https.request(options, (res) => {
                 const statusCode: number = this.handleResponse(res) || 400;
 
@@ -71,16 +75,20 @@ export class HttpRequestHelper {
                     reject(`problem with request, status code: ${statusCode}`);
                 }
 
-                var body = "";
+                let body = "";
                 res.on("data", (chunk) => {
                     body += chunk;
                 });
 
                 res.on("end", () => {
-                    const contentTypes = (res.headers["content-type"] || "").split(";").map(s => s.toLowerCase());
+                    const contentTypes = (res.headers["content-type"] || "")
+                        .split(";")
+                        .map((s) => s.toLowerCase());
 
                     resolve(
-                        contentTypes.indexOf("application/json") !== -1 ? JSON.parse(body) : body
+                        contentTypes.indexOf("application/json") !== -1
+                            ? JSON.parse(body)
+                            : body
                     );
                 });
             });
@@ -103,8 +111,8 @@ export class HttpRequestHelper {
     private static createOptions(
         url: URL,
         method: string,
-        headers?: Map<String, String | Number>,
-        parameters?: Map<String, String | Number>
+        headers?: Map<string, string | number>,
+        parameters?: Map<string, string | number>
     ): https.RequestOptions {
         const options = {
             hostname: url.hostname,

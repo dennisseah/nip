@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommandBase } from "./commandBase";
-import { Logger } from "./utils/logger";
 import { Validator } from "./utils/validator";
 import { VariableCache } from "./utils/variableCache";
 import * as request from "./request";
@@ -11,7 +12,7 @@ import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 export abstract class TestCommandBase extends CommandBase {
     protected extractVariables(
         variables: Map<string, string>,
-        result: object,
+        result: any,
         variablesCfg: Map<string, string>
     ): void {
         if (variablesCfg) {
@@ -35,7 +36,7 @@ export abstract class TestCommandBase extends CommandBase {
         }, new Map<string, string>());
         VariableCache.store(id, dict);
     }
-    protected validate(result: object, validations: request.RequestItemValidation[]): void {
+    protected validate(result: any, validations: request.RequestItemValidation[]): void {
         if (validations) {
             validations.forEach(validation => {
                 if (validation.type === "validateMapValues") {
@@ -57,7 +58,7 @@ export abstract class TestCommandBase extends CommandBase {
             });
         }
     }
-    protected polling(result: object, poll: request.RequestItemPoll): boolean {
+    protected polling(result: any, poll: request.RequestItemPoll): boolean {
         if (poll) {
             if (poll.type === "bool_true") {
                 const val = JSONPath({ path: poll.path, json: result,} as JSONPathOptions);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type HttpTypes = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export interface RequestItemRequest {
@@ -5,7 +6,7 @@ export interface RequestItemRequest {
     method: HttpTypes;
     headers: Map<string, string | number>;
     parameters?: Map<string, string | number>;
-    json?: object;
+    json?: any;
 }
 
 export interface RequestItemPoll {
