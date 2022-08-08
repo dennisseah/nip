@@ -41,7 +41,7 @@ export abstract class CommandBase {
                 Logger.error((ex as Error).message);
             } finally {
                 const end = new Date().getTime();
-                Logger.log(`\ntime taken: ${Math.ceil((end - start) / 6000)} minutes.`);
+                Logger.log(`\ntime taken: ${Math.ceil((end - start) / 60000)} minutes.`);
             }
         })();
     }
