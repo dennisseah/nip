@@ -37,7 +37,7 @@ export class VariableCache {
         }
     }
 
-    static createCacheDirectory(): void {
+    private static createCacheDirectory(): void {
         const fp = this.getCacheDirectory();
         if (!fs.existsSync(fp)) {
             fs.mkdirSync(fp);
