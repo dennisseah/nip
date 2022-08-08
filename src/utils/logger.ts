@@ -24,9 +24,7 @@ export class Logger {
         throw new Error(`Unknown log level, ${level}`);
     }
     static setLevel(level: LogLevel): void {
-        if (level) {
-            this.level = level;
-        }
+        this.level = level;
     }
     static getLevel(): LogLevel {
         return this.level;
