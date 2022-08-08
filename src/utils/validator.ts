@@ -2,39 +2,32 @@ import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 
 export class Validator {
     static validateStringValue(obj: object, path: string, expectedVal: string) {
-        const target = JSONPath({ path: path, json: obj } as JSONPathOptions);
-        if (target.length === 0) {
-            throw new Error("validateStringValue function failed");
-        }
-
-        const test = target[0] as string;
+        const test = this.matchPath(obj, path)[0] as string;
 
         if (test !== expectedVal) {
-            throw new Error(`validateStringValue function failed. expected ${expectedVal} but got ${test}`);
+            throw new Error(
+                `validateStringValue function failed. expected ${expectedVal} but got ${test}`
+            );
         }
     }
-    static validateNumericValue(obj: object, path: string, expectedVal: number) {
-        const target = JSONPath({ path: path, json: obj } as JSONPathOptions);
-        if (target.length === 0) {
-            throw new Error("validateNumericValue function failed");
-        }
-
-        const test = target[0] as number;
+    static validateNumericValue(
+        obj: object,
+        path: string,
+        expectedVal: number
+    ) {
+        const test = this.matchPath(obj, path)[0] as number;
 
         if (test !== expectedVal) {
-            throw new Error(`validateNumericValue function failed. expected ${expectedVal} but got ${test}`);
+            throw new Error(
+                `validateNumericValue function failed. expected ${expectedVal} but got ${test}`
+            );
         }
     }
     static validateArraySize(obj: object, path: string, expectedVal: number) {
-        const target = JSONPath({ path: path, json: obj } as JSONPathOptions);
-        if (target.length === 0) {
-            throw new Error("validateArraySize function failed");
-        }
-
-        const test = target[0] as Array<object>;
+        const test = this.matchPath(obj, path)[0] as Array<object>;
 
         if (test.length !== expectedVal) {
-            throw new Error("validateArraySize function failed");
+            throw new Error(`validateArraySize function failed. expected ${expectedVal} but got ${test.length}`);
         }
     }
     static validateMapValues(
@@ -42,12 +35,9 @@ export class Validator {
         path: string,
         valuePath: string,
         expectedVal: string,
-        all: boolean
+        all: boolean = true
     ) {
-        const target = JSONPath({ path: path, json: obj } as JSONPathOptions);
-        if (target.length === 0) {
-            throw new Error("validateMapValues function failed");
-        }
+        const target = this.matchPath(obj, path);
 
         const allMatch = Object.values(target[0]).every((val) => {
             const mapVal = JSONPath({
@@ -64,7 +54,16 @@ export class Validator {
         }
     }
     static validateExist(obj: object, path: string) {
+        return this.matchPath(obj, path).length > 0;
+    }
+
+    private static matchPath(obj: object, path: string) {
         const target = JSONPath({ path: path, json: obj } as JSONPathOptions);
-        return target.length > 0;
+        if (target.length === 0) {
+            throw new Error(
+                `validation function failed, path, ${path} does not resolve to any value`
+            );
+        }
+        return target;
     }
 }
