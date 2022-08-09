@@ -1,6 +1,6 @@
 import sinon, { SinonSandbox, SinonStub } from "sinon";
 import { expect } from "chai";
-import fs from "fs";
+import fs, { Dirent } from "fs";
 import * as path from "path";
 import * as os from "os";
 import { VariableCache } from "../../src/utils/variableCache";
@@ -13,6 +13,50 @@ const mockData = new Map<string, string>([
 const cacheDir = path.join(os.homedir(), VariableCache.FOLDER_NAME);
 const filename = path.join(cacheDir, id);
 
+describe("VariableCache list unit test", () => {
+    const sandbox: SinonSandbox = sinon.createSandbox();
+    let spyExistsSync: SinonStub;
+    let spyReaddirSync: SinonStub;
+    const file = new Dirent();
+    file.name = "test"
+    const files: Dirent[] = [file];
+
+    before(() => {
+        spyExistsSync = sandbox.stub(fs, "existsSync").withArgs(cacheDir).returns(true);
+        spyReaddirSync = sandbox.stub(fs, "readdirSync").withArgs(cacheDir, sinon.match.any).returns(files);
+    });
+
+    after(() => {
+        sandbox.restore();
+    });
+
+    it("list test", () => {
+        VariableCache.list();
+        sinon.assert.calledOnce(spyExistsSync);
+        sinon.assert.calledOnce(spyReaddirSync);
+    });
+});
+
+describe("VariableCache list when cache directory does not exist unit test", () => {
+    const sandbox: SinonSandbox = sinon.createSandbox();
+    let spyExistsSync: SinonStub;
+    let spyReaddirSync: SinonStub;
+
+    before(() => {
+        spyExistsSync = sandbox.stub(fs, "existsSync").withArgs(cacheDir).returns(false);
+        spyReaddirSync = sandbox.stub(fs, "readdirSync").withArgs(cacheDir, sinon.match.any);
+    });
+
+    after(() => {
+        sandbox.restore();
+    });
+
+    it("list test", () => {
+        VariableCache.list();
+        sinon.assert.calledOnce(spyExistsSync);
+        sinon.assert.notCalled(spyReaddirSync);
+    });
+});
 
 describe("VariableCache fetch unit test", () => {
     const sandbox: SinonSandbox = sinon.createSandbox();

@@ -8,6 +8,13 @@ import { Logger } from "./logger";
 export class VariableCache {
     static FOLDER_NAME = ".nip_cache";
 
+    static list(): string[] {
+        const dir = this.getCacheDirectory();
+        if (fs.existsSync(dir)) {
+            return fs.readdirSync(dir, { withFileTypes: true }).map(d => d.name);
+        }
+        return [];
+    }
     static fetch(id: string | undefined): Map<string, string> {
         if (id) {
             this.createCacheDirectory();
@@ -19,14 +26,15 @@ export class VariableCache {
         }
         return new Map<string, string>();
     }
-
-    static clear(id: string | undefined): void {
+    static clear(id: string | undefined): boolean {
         if (id) {
             const fp = this.getCacheFilename(id);
             if (fs.existsSync(fp)) {
                 fs.unlinkSync(fp);
+                return true;
             }
         }
+        return false;
     }
     static store(id: string | undefined, data: Map<string, string>): void {
         if (id) {

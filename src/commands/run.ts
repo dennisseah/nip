@@ -16,21 +16,24 @@ import { env } from "process";
 import { TestCommandBase } from "../testCommandBase";
 
 export class Run extends TestCommandBase implements CommandHandler {
+
     register(cmd: Command): void {
         this.registerCmd(cmd, "run");
     }
     protected addOptions(cmd: Command): Command {
         return super.addOptions(cmd)
+            .option("-d --datadir <datadir>", "data folder name.")
             .option("-f --filename <filename>", 'test file name.')
             .option("-r --restart", "restart test run, that's do not use previous run variables.", false)
             .option("-t --teardown", 'run tear down steps.', false);
     }
     protected doAction(): Promise<void> {
+        const dataDir = this.subCmd!.opts().datadir || path.join(".", "data");
         const filename = this.subCmd!.opts().filename;
         const teardown = this.subCmd!.opts().teardown;
         const restart = this.subCmd!.opts().restart;
 
-        const data = RequestFile.fetch(path.join(this.getDataDir(), filename));
+        const data = RequestFile.fetch(path.join(dataDir, filename));
 
         data.variables = new Map(Object.entries(data.variables));
         Object.keys(env).forEach((k) => data.variables.set(k, env[k]!.toString()));

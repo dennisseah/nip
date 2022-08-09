@@ -8,7 +8,7 @@ import { Logger } from "./utils/logger";
  */
 export abstract class CommandBase {
     protected subCmd: Command | undefined;
-    private dataDir: string | undefined;
+    
     private name = "";
 
     protected registerCmd(parent: Command, name: string): Command {
@@ -16,14 +16,7 @@ export abstract class CommandBase {
         this.subCmd = parent.command(name).action(async (): Promise<void> => {
             await this.action();
         });
-        this.subCmd.option(
-            "-l --loglevel <logLevel>",
-            "log level. off, debug, info, error.",
-            "info"
-        ).option(
-            "-d --datadir <datadir>",
-            "data folder name."
-        );
+        this.subCmd.option("-l --loglevel <logLevel>", "log level. off, debug, info, error.", "info");
 
         return this.addOptions(this.subCmd);
     }
@@ -42,7 +35,6 @@ export abstract class CommandBase {
         try {
             if (cmdOpts !== undefined) {
                 Logger.setLevel(Logger.parseLevel(cmdOpts.loglevel as string));
-                this.dataDir = cmdOpts.datadir as string;
             }
             Logger.debug(`executing ${this.name} command.`);
             await this.doAction();
@@ -51,10 +43,6 @@ export abstract class CommandBase {
         } finally {
             this.logTimeTaken(start);
         }
-    }
-
-    protected getDataDir(): string {
-        return (this.dataDir !== undefined) ? this.dataDir : path.join(".", "data");
     }
 
     protected abstract doAction(): Promise<void>;
