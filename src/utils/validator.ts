@@ -26,7 +26,7 @@ export interface ValidateMapValuesParameters {
 }
 
 export class Validator {
-    static validate(obj: any, type: string, parameters: any): void {
+    static validate(obj: any, type: string, parameters: any) {
         if (type === "validateStringValue") {
             this.validateStringValue(obj, parameters as ValidateStringValueParameters);
         } else if (type === "validateNumericValue") {

@@ -33,7 +33,7 @@ export abstract class CommandBase {
     }
 
     protected async action(): Promise<void> {
-        const start: number = new Date().getTime();
+        const start = new Date().getTime();
         let cmdOpts: OptionValues | undefined;
         if (this.subCmd !== undefined) {
             cmdOpts = this.subCmd.opts();
@@ -49,8 +49,7 @@ export abstract class CommandBase {
         } catch (ex) {
             Logger.error((ex as Error).message);
         } finally {
-            const end: number = new Date().getTime();
-            Logger.log(`\ntime taken: ${Math.ceil((end - start) / 60000)} minutes.`);
+            this.logTimeTaken(start);
         }
     }
 
@@ -59,4 +58,21 @@ export abstract class CommandBase {
     }
 
     protected abstract doAction(): Promise<void>;
+
+    private logTimeTaken(start: number) {
+        const end = new Date().getTime();
+        const milliSeconds = end - start;
+
+        if (milliSeconds < 1000) {
+            Logger.log(`\ntime taken: ${Math.round(milliSeconds)} milliseconds.`);
+            return;
+        }
+        const seconds = milliSeconds / 1000;
+
+        if (seconds < 60) {
+            Logger.log(`\ntime taken: ${Math.round(seconds)} seconds.`);
+        } else {
+            Logger.log(`\ntime taken: ${Math.round(seconds / 60)} minutes.`);
+        }
+    }
 }
