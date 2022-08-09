@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 const program = new Command();
-program.description("nip");
+program.description("Norm Integration Plan");
 program.version("0.0.1");
 program.option("-v, --verbose", "verbose logging");
 
