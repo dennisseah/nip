@@ -34,7 +34,7 @@ export class Run extends TestCommandBase implements CommandHandler {
 
         data.variables = new Map(Object.entries(data.variables));
         Object.keys(env).forEach((k) => data.variables.set(k, env[k]!.toString()));
-        
+
         if (!restart) {
             const cachedVariables = VariableCache.fetch(data.id);
             [...cachedVariables.keys()].forEach((k) => data.variables.set(k, cachedVariables.get(k)!));

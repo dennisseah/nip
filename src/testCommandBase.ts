@@ -8,6 +8,7 @@ import * as request from "./request";
 
 import { env } from "process";
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
+import { Poller } from "./utils/poller";
 
 export abstract class TestCommandBase extends CommandBase {
     protected extractVariables(
@@ -42,20 +43,6 @@ export abstract class TestCommandBase extends CommandBase {
         }
     }
     protected polling(result: any, poll: request.RequestItemPoll): boolean {
-        if (poll) {
-            if (poll.type === "bool_true") {
-                const val = JSONPath({ path: poll.path, json: result,} as JSONPathOptions);
-                return val.length === 1 && val[0] === true;
-            }
-            if (poll.type === "bool_false") {
-                const val = JSONPath({ path: poll.path, json: result,} as JSONPathOptions);
-                return val.length === 1 && val[0] === false;
-            }
-            if (poll.type === "empty_list") {
-                return Array.isArray(result) && result.length === 0;
-            }
-            throw new Error(`Unknown poll type, ${poll.type}`);
-        }
-        return true;
+        return (poll) ? Poller.poll(result, poll.type, poll.path) : true;
     }
 }
