@@ -1,5 +1,5 @@
 import { Command } from "commander";
 
 export interface CommandHandler {
-  register(cmd: Command): void;
+    register(cmd: Command): void;
 }
