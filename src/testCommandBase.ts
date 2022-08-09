@@ -38,24 +38,7 @@ export abstract class TestCommandBase extends CommandBase {
     }
     protected validate(result: any, validations: request.RequestItemValidation[]): void {
         if (validations) {
-            validations.forEach(validation => {
-                if (validation.type === "validateMapValues") {
-                    const params = validation.parameters as request.ValidateMapValuesParameters;
-                    Validator.validateMapValues(result, params.path, params.valuePath, params.expectedVal, params.all);
-                } else if (validation.type === "validateStringValue") {
-                    const params = validation.parameters as request.ValidateStringValueParameters;
-                    Validator.validateStringValue(result, params.path, params.expectedVal);
-                } else if (validation.type === "validateNumericValue") {
-                    const params = validation.parameters as request.ValidateNumericValueParameters;
-                    Validator.validateNumericValue(result, params.path, params.expectedVal);
-                } else if (validation.type === "validateArraySize") {
-                    const params = validation.parameters as request.ValidateArraySizeParameters;
-                    Validator.validateArraySize(result, params.path, params.expectedVal);
-                } else if (validation.type === "validateExist") {
-                    const params = validation.parameters as request.ValidateExistParameters;
-                    Validator.validateExist(result, params.path);
-                }
-            });
+            validations.forEach(validation => Validator.validate(result, validation.type, validation.parameters));
         }
     }
     protected polling(result: any, poll: request.RequestItemPoll): boolean {

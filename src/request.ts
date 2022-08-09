@@ -1,3 +1,12 @@
+import {
+    ValidateArraySizeParameters,
+    ValidateExistParameters,
+    ValidateMapValuesParameters,
+    ValidateNumericValueParameters,
+    ValidateStringValueParameters
+} from "./utils/validator";
+
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type HttpTypes = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -12,32 +21,6 @@ export interface RequestItemRequest {
 export interface RequestItemPoll {
     type: "bool_true" | "bool_false" | "empty_list";
     path?: string;
-}
-
-export interface ValidateStringValueParameters {
-    path: string;
-    expectedVal: string;
-}
-
-export interface ValidateNumericValueParameters {
-    path: string;
-    expectedVal: number;
-}
-
-export interface ValidateArraySizeParameters {
-    path: string;
-    expectedVal: number;
-}
-
-export interface ValidateMapValuesParameters {
-    path: string;
-    valuePath: string;
-    expectedVal: string;
-    all: boolean;
-}
-
-export interface ValidateExistParameters {
-    path: string;
 }
 
 export interface RequestItemValidation {

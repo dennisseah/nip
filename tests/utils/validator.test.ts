@@ -1,5 +1,12 @@
 import { expect } from "chai";
-import { Validator } from "../../src/utils/validator";
+import {
+    ValidateArraySizeParameters,
+    ValidateExistParameters,
+    ValidateMapValuesParameters,
+    ValidateNumericValueParameters,
+    ValidateStringValueParameters,
+    Validator
+} from "../../src/utils/validator";
 
 describe("Validator unit test", () => {
     it("validateStringValue test", () => {
@@ -9,10 +16,14 @@ describe("Validator unit test", () => {
             }
         };
         const path = "$.[levelOne][id]";
-        Validator.validateStringValue(data, path, "test");
+        Validator.validate(data, "validateStringValue",
+            { path: path, expectedVal: "test" } as ValidateStringValueParameters);
 
-        expect(() => Validator.validateStringValue(data, path, "test1")).to.throw(
-            Error, "validateStringValue function failed. expected test1 but got test");
+        expect(() => Validator.validate(data, "validateStringValue",
+            { path: path, expectedVal: "test1" } as ValidateStringValueParameters)
+        ).to.throw(
+            Error, "validateStringValue function failed. expected test1 but got test"
+        );
     });
     it("validateNumericValue test", () => {
         const data = {
@@ -23,16 +34,24 @@ describe("Validator unit test", () => {
             }
         };
         const path = "$.[levelOne][sub[val]";
-        Validator.validateNumericValue(data, path, 1);
-        expect(() => Validator.validateNumericValue(data, path, 2)).to.throw(
-            Error, "validateNumericValue function failed. expected 2 but got 1");
+        Validator.validate(data, "validateNumericValue",
+            { path: path, expectedVal: 1 } as ValidateNumericValueParameters);
+        expect(() => Validator.validate(data, "validateNumericValue",
+            { path: path, expectedVal: 2 } as ValidateNumericValueParameters)
+        ).to.throw(
+            Error, "validateNumericValue function failed. expected 2 but got 1"
+        );
     });
     it("validateArraySize test", () => {
         const data = { items: [0, 1] };
         const path = "$.[items]";
-        Validator.validateArraySize(data, path, 2);
-        expect(() => Validator.validateArraySize(data, path, 1)).to.throw(
-            Error, "validateArraySize function failed. expected 1 but got 2");
+        Validator.validate(data, "validateArraySize",
+            { path: path, expectedVal: 2 } as ValidateArraySizeParameters);
+        expect(() => Validator.validate(data, "validateArraySize",
+            { path: path, expectedVal: 1 } as ValidateArraySizeParameters)
+        ).to.throw(
+            Error, "validateArraySize function failed. expected 1 but got 2"
+        );
     });
     it("validateMapValues test", () => {
         const data = {
@@ -41,8 +60,11 @@ describe("Validator unit test", () => {
                 world: { errors: [] },
             },
         };
-        Validator.validateMapValues(data, "$.[values]", "$.errors", "[]", true);
-        expect(() => Validator.validateMapValues(data, "$.[values]", "$.errors", "[]", false)).to.throw(Error);
+        Validator.validate(data, "validateMapValues",
+            { path: "$.[values]", valuePath: "$.errors", expectedVal: "[]", all: true } as ValidateMapValuesParameters);
+        expect(() => Validator.validate(data, "validateMapValues",
+            { path: "$.[values]", valuePath: "$.errors", expectedVal: "[]", all: false } as ValidateMapValuesParameters)
+        ).to.throw(Error);
 
         const data2 = {
             values: {
@@ -50,15 +72,28 @@ describe("Validator unit test", () => {
                 world: { errors: [ "error"] },
             },
         };
-        Validator.validateMapValues(data2, "$.[values]", "$.errors", "[]", false);
-        expect(() => Validator.validateMapValues(data2, "$.[values]", "$.errors", "[]", true)).to.throw(Error);
+        Validator.validate(data2, "validateMapValues",
+            { path: "$.[values]", valuePath: "$.errors", expectedVal: "[]", all: false } as ValidateMapValuesParameters)
+        expect(() => Validator.validate(data2, "validateMapValues",
+            { path: "$.[values]", valuePath: "$.errors", expectedVal: "[]", all: true } as ValidateMapValuesParameters)
+        ).to.throw(Error);
     });
     it("validateExist test", () => {
         const data = { values: 1 };
-        Validator.validateExist(data, "$.[values]");
-        expect(() => Validator.validateExist(data, "$.[valuesX]")).to.throw(
-            Error,
-            "validation function failed, path, $.[valuesX] does not resolve to any value"
+        Validator.validate(data, "validateExist", { path: "$.[values]" } as ValidateExistParameters);
+        
+        expect(() => Validator.validate(data, "validateExist",
+            { path: "$.[valuesX]" } as ValidateExistParameters)
+        ).to.throw(
+            Error, "validation function failed, path, $.[valuesX] does not resolve to any value"
         );
+    });
+    it("invalid validation type test", () => {
+        const data = { values: 1 };
+        expect(() =>
+            Validator.validate(data, "unknown", {
+                path: "$.[valuesX]",
+            } as ValidateExistParameters)
+        ).to.throw(Error, "Unknown validation type, unknown");
     });
 });

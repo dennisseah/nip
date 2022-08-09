@@ -2,8 +2,51 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 
+export interface ValidateStringValueParameters {
+    path: string;
+    expectedVal: string;
+}
+export interface ValidateNumericValueParameters {
+    path: string;
+    expectedVal: number;
+}
+export interface ValidateExistParameters {
+    path: string;
+}
+
+export interface ValidateArraySizeParameters {
+    path: string;
+    expectedVal: number;
+}
+export interface ValidateMapValuesParameters {
+    path: string;
+    valuePath: string;
+    expectedVal: string;
+    all: boolean;
+}
+
 export class Validator {
-    static validateStringValue(obj: any, path: string, expectedVal: string) {
+    static validate(obj: any, type: string, parameters: any): void {
+        if (type === "validateStringValue") {
+            this.validateStringValue(obj, parameters as ValidateStringValueParameters);
+        } else if (type === "validateNumericValue") {
+            this.validateNumericValue(obj, parameters as ValidateNumericValueParameters);
+        } else if (type === "validateExist") {
+            this.validateExist(obj, parameters as ValidateExistParameters);
+        } else if (type === "validateArraySize") {
+            this.validateArraySize(obj, parameters as ValidateArraySizeParameters);
+        } else if (type === "validateMapValues") {
+            this.validateMapValues(obj, parameters as ValidateMapValuesParameters);
+        } else {
+            throw new Error(`Unknown validation type, ${type}`);
+        }
+    }
+    private static validateStringValue(
+        obj: any,
+        parameters: ValidateStringValueParameters
+    ) {
+        const path = parameters.path;
+        const expectedVal = parameters.expectedVal;
         const test = this.matchPath(obj, path)[0] as string;
 
         if (test !== expectedVal) {
@@ -12,7 +55,9 @@ export class Validator {
             );
         }
     }
-    static validateNumericValue(obj: any, path: string, expectedVal: number) {
+    private static validateNumericValue(obj: any, parameters: ValidateNumericValueParameters) {
+        const path = parameters.path;
+        const expectedVal = parameters.expectedVal;
         const test = this.matchPath(obj, path)[0] as number;
 
         if (test !== expectedVal) {
@@ -21,7 +66,9 @@ export class Validator {
             );
         }
     }
-    static validateArraySize(obj: any, path: string, expectedVal: number) {
+    private static validateArraySize(obj: any, parameters: ValidateArraySizeParameters) {
+        const path = parameters.path;
+        const expectedVal = parameters.expectedVal;
         const test = this.matchPath(obj, path)[0] as Array<any>;
 
         if (test.length !== expectedVal) {
@@ -30,7 +77,12 @@ export class Validator {
             );
         }
     }
-    static validateMapValues(obj: any, path: string, valuePath: string, expectedVal: string, all: boolean) {
+    private static validateMapValues(obj: any, parameters: ValidateMapValuesParameters) {
+        const path = parameters.path;
+        const valuePath = parameters.valuePath;
+        const expectedVal = parameters.expectedVal;
+        const all = parameters.all;
+
         const target = this.matchPath(obj, path);
 
         const allMatch = Object.values(target[0]).every((val) => {
@@ -47,8 +99,8 @@ export class Validator {
             throw new Error("validateMapValues function failed");
         }
     }
-    static validateExist(obj: any, path: string) {
-        return this.matchPath(obj, path).length > 0;
+    private static validateExist(obj: any, parameters: ValidateExistParameters) {
+        return this.matchPath(obj, parameters.path).length > 0;
     }
 
     private static matchPath(obj: any, path: string) {
