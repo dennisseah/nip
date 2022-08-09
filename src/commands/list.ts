@@ -8,7 +8,7 @@ export class List extends CommandBase implements CommandHandler{
     register(cmd: Command): void {
         this.registerCmd(cmd, "list");
     }
-    protected async doAction(): Promise<void> {
+    protected doAction(): Promise<void> {
         return new Promise((resolve) => {
             Logger.log("Test data files:");
 

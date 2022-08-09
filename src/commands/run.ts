@@ -25,7 +25,7 @@ export class Run extends TestCommandBase implements CommandHandler {
             .option("-r --restart", "restart test run, that's do not use previous run variables.", false)
             .option("-t --teardown", 'run tear down steps.', false);
     }
-    protected async doAction(): Promise<void> {
+    protected doAction(): Promise<void> {
         const filename = this.subCmd!.opts().filename;
         const teardown = this.subCmd!.opts().teardown;
         const restart = this.subCmd!.opts().restart;
