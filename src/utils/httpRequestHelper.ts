@@ -32,7 +32,7 @@ export class HttpRequestHelper {
         parameters?: Map<string, string | number>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): Promise<any> {
-        return this.makePOSTPUTRequest(name, "PUT", url, payload, headers, parameters);
+        return this.makePostPutRequest(name, "PUT", url, payload, headers, parameters);
     }
     static async makePOSTRequest(
         name: string,
@@ -42,9 +42,9 @@ export class HttpRequestHelper {
         parameters?: Map<string, string | number>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): Promise<any> {
-        return this.makePOSTPUTRequest(name, "POST", url, payload, headers, parameters);
+        return this.makePostPutRequest(name, "POST", url, payload, headers, parameters);
     }
-    private static async makePOSTPUTRequest(
+    private static async makePostPutRequest(
         name: string,
         method: string,
         url: URL,
