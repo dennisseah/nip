@@ -5,7 +5,17 @@ import { JSONUtils } from "../../src/utils/jsonUtils";
 
 describe("RequestFile set identifier unit test", () => {
     const filename = "test.json";
-    const data = { hello: "world", steps: [] };
+    const data = {
+        hello: "world",
+        steps: [
+            {
+                "name": "Fetch Products",
+                "request": {
+                    "url": "http://test.com",
+                    "method": "GET"
+                }
+            }
+    ]};
     const sandbox: SinonSandbox = sinon.createSandbox();
 
     before(() => {
@@ -27,7 +37,19 @@ describe("RequestFile set identifier unit test", () => {
 
 describe("RequestFile when identifier already exist unit test", () => {
     const filename = "test.json";
-    const data = { id: "test", hello: "world", steps: [] };
+    const data = {
+        id: "test",
+        hello: "world",
+        steps: [
+            {
+                "name": "Fetch Products",
+                "request": {
+                    "url": "http://test.com",
+                    "method": "GET"
+                }
+            }
+    ]};
+
     const sandbox: SinonSandbox = sinon.createSandbox();
 
     before(() => {
@@ -47,7 +69,7 @@ describe("RequestFile when identifier already exist unit test", () => {
 
 describe("RequestFile when data file is invalid unit test", () => {
     const filename = "test.json";
-    const data = { id: "test", hello: "world" };
+    const data = { id: "test", hello: "world" }; // missing steps
     const sandbox: SinonSandbox = sinon.createSandbox();
 
     before(() => {
