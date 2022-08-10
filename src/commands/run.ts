@@ -16,7 +16,6 @@ import { env } from "process";
 import { TestCommandBase } from "../testCommandBase";
 
 export class Run extends TestCommandBase implements CommandHandler {
-
     register(cmd: Command): void {
         this.registerCmd(cmd, "run");
     }
@@ -51,15 +50,18 @@ export class Run extends TestCommandBase implements CommandHandler {
 
         const steps = teardown ? data.teardowns : data.steps;
 
-        return Promise.mapSeries(steps, (item: request.RequestItem) => this.createStep(item, data, teardown))
-            .then(() => {
-                Logger.log("completed all the steps");
-                this.dumpVariables(data.id!, data.variables);
-            })
-            .catch((rejection) => {
-                console.error(`Fail to run all the steps, ${rejection}`);
-                this.dumpVariables(data.id!, data.variables);
-            });
+        if (steps) {
+            return Promise.mapSeries(steps, (item: request.RequestItem) => this.createStep(item, data, teardown))
+                .then(() => {
+                    Logger.log("completed all the steps");
+                    this.dumpVariables(data.id!, data.variables);
+                })
+                .catch((rejection) => {
+                    console.error(`Fail to run all the steps, ${rejection}`);
+                    this.dumpVariables(data.id!, data.variables);
+                });
+        }
+        return new Promise((resolve) => resolve());
     }
     private async createStep(item: request.RequestItem, data: request.Request, ignoreError: boolean): Promise<string> {
         return new Promise((resolve, reject) => {
