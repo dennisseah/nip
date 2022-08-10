@@ -18,6 +18,7 @@ export class RequestFile {
         if (error) {
             throw new Error(`Schema error: ${error}`);
         }
+
         JSONUtils.toFile(data, path);
         return data;
     }

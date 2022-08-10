@@ -5,11 +5,12 @@ import { JSONUtils } from "../../src/utils/jsonUtils";
 
 describe("RequestFile set identifier unit test", () => {
     const filename = "test.json";
-    const data = { hello: "world" };
+    const data = { hello: "world", steps: [] };
     const sandbox: SinonSandbox = sinon.createSandbox();
 
     before(() => {
         sandbox.stub(JSONUtils, "fromFile").withArgs(filename).returns(data);
+        sandbox.stub(JSONUtils, "toFile").withArgs(filename, sinon.match.any);
     });
 
     after(() => {
@@ -26,11 +27,12 @@ describe("RequestFile set identifier unit test", () => {
 
 describe("RequestFile when identifier already exist unit test", () => {
     const filename = "test.json";
-    const data = { id: "test", hello: "world" };
+    const data = { id: "test", hello: "world", steps: [] };
     const sandbox: SinonSandbox = sinon.createSandbox();
 
     before(() => {
         sandbox.stub(JSONUtils, "fromFile").withArgs(filename).returns(data);
+        sandbox.stub(JSONUtils, "toFile").withArgs(filename, sinon.match.any);
     });
 
     after(() => {
@@ -40,5 +42,24 @@ describe("RequestFile when identifier already exist unit test", () => {
     it("identifier already exist", async () => {
         const result = RequestFile.fetch(filename);
         expect(result.id).equal("test");
+    });
+});
+
+describe("RequestFile when data file is invalid unit test", () => {
+    const filename = "test.json";
+    const data = { id: "test", hello: "world" };
+    const sandbox: SinonSandbox = sinon.createSandbox();
+
+    before(() => {
+        sandbox.stub(JSONUtils, "fromFile").withArgs(filename).returns(data);
+        sandbox.stub(JSONUtils, "toFile").withArgs(filename, sinon.match.any);
+    });
+
+    after(() => {
+        sandbox.restore();
+    });
+
+    it("identifier already exist", async () => {
+        expect(() => RequestFile.fetch(filename)).to.throw(Error, "Schema error: data must have required property 'steps");
     });
 });
