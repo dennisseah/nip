@@ -1,6 +1,5 @@
 import { Command, OptionValues } from "commander";
 
-import * as path from "path";
 import { Logger } from "./utils/logger";
 
 /**
