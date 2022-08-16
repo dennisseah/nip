@@ -22,7 +22,7 @@ export class Run extends TestCommandBase implements CommandHandler {
     protected addOptions(cmd: Command): Command {
         return super.addOptions(cmd)
             .option("-d --datadir <datadir>", "data folder name.")
-            .option("-f --filename <filename>", 'test file name.')
+            .requiredOption("-f --filename <filename>", 'test file name.')
             .option("-r --restart", "restart test run, that's do not use previous run variables.", false)
             .option("-t --teardown", 'run tear down steps.', false);
     }
