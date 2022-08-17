@@ -1,52 +1,52 @@
 import sinon, { SinonSandbox, SinonStub } from "sinon";
 import fs from "fs";
 import { expect } from "chai";
-import { JSONUtils } from "../../src/utils/jsonUtils";
+import { YAMLUtils } from "../../src/utils/yamlUtils";
 
-describe("JSONUtils fromFile positive unit test", () => {
-    const filename = "test.json";
-    const data = { hello: "world" };
+describe("YAMLUtils fromFile positive unit test", () => {
+    const filename = "test.yaml";
+    const raw = "hello: world";
     const sandbox: SinonSandbox = sinon.createSandbox();
 
     before(() => {
         sandbox.stub(fs, "existsSync").withArgs(filename).returns(true);
-        sandbox.stub(fs, "readFileSync").withArgs(filename).returns(JSON.stringify(data));
+        sandbox.stub(fs, "readFileSync").withArgs(filename).returns(raw);
     });
 
     after(() => {
         sandbox.restore();
     });
 
-    it("Get JSON from a file then OK", async () => {
-        const result = JSONUtils.fromFile(filename);
+    it("Get object from a file then OK", async () => {
+        const result = YAMLUtils.fromFile(filename);
+        const data = { hello: "world" };
         expect(result).to.deep.equal(data);
-
     });
 });
 
-describe("JSONUtils toFile positive unit test", () => {
+describe("YAMLUtils toFile positive unit test", () => {
     const filename = "test.json";
-    const data = { hello: "world" };
     const sandbox: SinonSandbox = sinon.createSandbox();
     let cbSpy: SinonStub;
-        
+
     before(() => {
         cbSpy = sandbox
             .stub(fs, "writeFileSync")
-            .withArgs(filename, JSON.stringify(data, null, 4));
+            .withArgs(filename, sinon.match.string);
     });
 
     after(() => {
         sandbox.restore();
     });
 
-    it("Save JSON to a file then OK", async () => {
-        JSONUtils.toFile(data, filename);
+    it("Save object to a file then OK", async () => {
+        const data = { hello: "world" };
+        YAMLUtils.toFile(data, filename);
         sandbox.assert.calledOnce(cbSpy);
     });
 });
 
-describe("JSONUtils fromFile negative unit test", () => {
+describe("YAMLUtils fromFile negative unit test", () => {
     const filename = "test.json";
     const sandbox: SinonSandbox = sinon.createSandbox();
 
@@ -56,9 +56,9 @@ describe("JSONUtils fromFile negative unit test", () => {
 
     after(() => {
         sandbox.restore();
-    })
+    });
 
-    it("Get JSON from a file that does not exist then err", async () => {
-        expect(() => JSONUtils.fromFile(filename)).to.throw(Error);
+    it("Get object from a file that does not exist then err", async () => {
+        expect(() => YAMLUtils.fromFile(filename)).to.throw(Error);
     });
 });
