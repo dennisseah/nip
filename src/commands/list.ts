@@ -21,7 +21,7 @@ export class List extends CommandBase implements CommandHandler{
             Logger.log("Test data files:");
 
             const files = fs.readdirSync(dataDir)
-                .filter((f) => f.endsWith(".json"));
+                .filter((f) => f.endsWith(".json") || f.endsWith(".yaml"));
             files.forEach((f) => Logger.log(`  ${f}`));
             resolve();
         });

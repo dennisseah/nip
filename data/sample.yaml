@@ -1,0 +1,36 @@
+id: d128b603-dfb6-489c-bf73-3b793f05a99f
+steps:
+  - name: Fetch Products
+    request:
+      url: '{{host}}/V4/Northwind/Northwind.svc/Products'
+      method: GET
+    validations:
+      - type: validateArraySize
+        parameters:
+          path: $.[value]
+          expectedVal: 20
+    variables:
+      first_product: $.[value][0][ProductID]
+  - name: Fetch next list of Products
+    request:
+      url: '{{host}}/V4/Northwind/Northwind.svc/Products'
+      method: GET
+      parameters:
+        $skiptoken: 20
+    validations:
+      - type: validateNumericValue
+        parameters:
+          path: $.[value][0][ProductID]
+          expectedVal: 21
+  - name: Fetch First Product
+    request:
+      url: '{{host}}/V4/Northwind/Northwind.svc/Products({{first_product}})'
+      method: GET
+    validations:
+      - type: validateStringValue
+        parameters:
+          path: $.[ProductName]
+          expectedVal: Chai
+variables:
+  host: https://services.odata.org
+

@@ -41,9 +41,11 @@
     },
     "dependencies": {
         "@types/bluebird": "^3.5.36",
+        "@types/js-yaml": "^4.0.5",
         "ajv": "^8.11.0",
         "bluebird": "^3.7.2",
         "commander": "8.3.0",
+        "js-yaml": "^4.1.0",
         "jsonpath-plus": "^7.0.0",
         "uuid": "^8.3.2"
     }
