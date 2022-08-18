@@ -14,7 +14,7 @@ import { Promise } from "bluebird";
 import { env } from "process";
 import { TestCommandBase } from "./testCommandBase";
 
-export class Run extends TestCommandBase {
+export class RunCommand extends TestCommandBase {
     protected getCommandName(): string {
         return "run";
     }

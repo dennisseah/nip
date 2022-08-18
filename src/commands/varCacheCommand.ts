@@ -5,7 +5,7 @@ import { CommandBase } from "./commandBase";
 import { VariableCache } from "../utils/variableCache";
 import { Logger } from "../utils/logger";
 
-export class VarCache extends CommandBase {
+export class VarCacheCommand extends CommandBase {
     protected getCommandName(): string {
         return "var-cache";
     }

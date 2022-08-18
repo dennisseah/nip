@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { CommandBase } from "./commandBase";
 
-export class List extends CommandBase {
+export class ListCommand extends CommandBase {
     protected getCommandName(): string {
         return "list";
     }
