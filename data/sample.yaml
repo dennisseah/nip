@@ -33,4 +33,3 @@ steps:
           expectedVal: Chai
 variables:
   host: https://services.odata.org
-

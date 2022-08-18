@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { Command } from "commander";
-import { CommandHandler } from "../commandHandler"
-import { CommandBase } from "../commandBase";
+import { CommandBase } from "./commandBase";
 import { VariableCache } from "../utils/variableCache";
 import { Logger } from "../utils/logger";
 
-export class VarCache extends CommandBase implements CommandHandler {
-    register(cmd: Command): void {
-        this.registerCmd(cmd, "var-cache");
+export class VarCache extends CommandBase {
+    protected getCommandName(): string {
+        return "var-cache";
     }
     protected addOptions(cmd: Command): Command {
         return super
@@ -29,7 +28,9 @@ export class VarCache extends CommandBase implements CommandHandler {
                     if (VariableCache.clear(clearCacheId)) {
                         Logger.log(`Cache with id, ${clearCacheId} is deleted`);
                     } else {
-                        Logger.log(`Cache with id, ${clearCacheId} was not found`);
+                        Logger.log(
+                            `Cache with id, ${clearCacheId} was not found`
+                        );
                     }
                 }
             } else {
@@ -53,9 +54,7 @@ export class VarCache extends CommandBase implements CommandHandler {
         if (cache.size === 0) {
             Logger.log("No entries");
         } else {
-            Logger.log(
-                JSON.stringify(Object.fromEntries(cache), null, 4)
-            );
+            Logger.log(JSON.stringify(Object.fromEntries(cache), null, 4));
         }
     }
 }

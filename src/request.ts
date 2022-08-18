@@ -3,18 +3,17 @@ import {
     ValidateExistParameters,
     ValidateMapValuesParameters,
     ValidateNumericValueParameters,
-    ValidateStringValueParameters
+    ValidateStringValueParameters,
 } from "./utils/validator";
 
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export type HttpTypes = 'GET' | 'POST' | 'PUT' | 'DELETE';
+export type HttpTypes = "GET" | "POST" | "PUT" | "DELETE";
 
 export interface RequestItemRequest {
     url: string;
     method: HttpTypes;
     headers: Map<string, string | number>;
     parameters?: Map<string, string | number>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     json?: any;
 }
 

@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommandBase } from "./commandBase";
-import { Validator } from "./utils/validator";
-import { VariableCache } from "./utils/variableCache";
-import * as request from "./request";
-
+import { Validator } from "../utils/validator";
+import { VariableCache } from "../utils/variableCache";
+import * as request from "../request";
 
 import { env } from "process";
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
-import { Poller } from "./utils/poller";
+import { Poller } from "../utils/poller";
 
 export abstract class TestCommandBase extends CommandBase {
     protected extractVariables(
@@ -19,7 +18,10 @@ export abstract class TestCommandBase extends CommandBase {
         if (variablesCfg) {
             const vars = new Map(Object.entries(variablesCfg));
             [...vars.keys()].forEach((k) => {
-                const val = JSONPath({ path: vars.get(k), json: result } as JSONPathOptions);
+                const val = JSONPath({
+                    path: vars.get(k),
+                    json: result,
+                } as JSONPathOptions);
                 if (val.length === 1) {
                     variables.set(k, val[0]);
                 }
@@ -37,12 +39,21 @@ export abstract class TestCommandBase extends CommandBase {
         }, new Map<string, string>());
         VariableCache.store(id, dict);
     }
-    protected validate(result: any, validations: request.RequestItemValidation[]): void {
+    protected validate(
+        result: any,
+        validations: request.RequestItemValidation[]
+    ): void {
         if (validations) {
-            validations.forEach(validation => Validator.validate(result, validation.type, validation.parameters));
+            validations.forEach((validation) =>
+                Validator.validate(
+                    result,
+                    validation.type,
+                    validation.parameters
+                )
+            );
         }
     }
     protected polling(result: any, poll: request.RequestItemPoll): boolean {
-        return (poll) ? Poller.poll(result, poll.type, poll.path) : true;
+        return poll ? Poller.poll(result, poll.type, poll.path) : true;
     }
 }
