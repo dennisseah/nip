@@ -67,14 +67,18 @@ export class RequestUtils {
 
         return options;
     }
-    private static handleResponse(res: http.IncomingMessage): number | undefined {
+    private static handleResponse(
+        res: http.IncomingMessage
+    ): number | undefined {
         Logger.debug(`STATUS: ${res.statusCode}`);
         Logger.debug(`HEADERS: ${JSON.stringify(res.headers)}`);
         res.setEncoding("utf8");
         return res.statusCode;
     }
     private static isJSONBody(res: http.IncomingMessage): boolean {
-        const contentTypes = (res.headers["content-type"] || "").split(";").map((s) => s.toLowerCase());
-        return (contentTypes.indexOf("application/json") !== -1);
+        const contentTypes = (res.headers["content-type"] || "")
+            .split(";")
+            .map((s) => s.toLowerCase());
+        return contentTypes.indexOf("application/json") !== -1;
     }
 }

@@ -11,7 +11,9 @@ export class VariableCache {
     static list(): string[] {
         const dir = this.getCacheDirectory();
         if (fs.existsSync(dir)) {
-            return fs.readdirSync(dir, { withFileTypes: true }).map(d => d.name);
+            return fs
+                .readdirSync(dir, { withFileTypes: true })
+                .map((d) => d.name);
         }
         return [];
     }

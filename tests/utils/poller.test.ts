@@ -1,10 +1,10 @@
 import { expect } from "chai";
-import {Poller } from "../../src/utils/poller";
+import { Poller } from "../../src/utils/poller";
 
 describe("Poller unit test", () => {
     it("bool_true test", () => {
         const data = {
-            val: true
+            val: true,
         };
         expect(Poller.poll(data, "bool_true", "$.[val]")).true;
     });
@@ -18,7 +18,10 @@ describe("Poller unit test", () => {
         const data = {
             val: true,
         };
-        expect(() => Poller.poll(data, "bool_true")).to.throw(Error, "Missing path");
+        expect(() => Poller.poll(data, "bool_true")).to.throw(
+            Error,
+            "Missing path"
+        );
     });
     it("bool_false test", () => {
         const data = {
@@ -55,7 +58,8 @@ describe("Poller unit test", () => {
             val: [],
         };
         expect(() => Poller.poll(data, "invalid", "$.[val]")).to.throw(
-            Error, "Unknown poll type, invalid"
+            Error,
+            "Unknown poll type, invalid"
         );
     });
 });

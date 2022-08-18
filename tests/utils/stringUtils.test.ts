@@ -5,7 +5,7 @@ describe("StringUtils unit test", () => {
     const variables: Map<string, string> = new Map<string, string>([
         ["token1", "hello"],
         ["token2", "world"],
-        ["token3", "!"]
+        ["token3", "!"],
     ]);
 
     it("fill none", () => {
@@ -17,11 +17,17 @@ describe("StringUtils unit test", () => {
         expect(result).equal("test hello");
     });
     it("fill two", () => {
-        const result = StringUtils.fillTokens("{{token2}} test {{token1}}", variables);
+        const result = StringUtils.fillTokens(
+            "{{token2}} test {{token1}}",
+            variables
+        );
         expect(result).equal("world test hello");
     });
     it("fill three", () => {
-        const result = StringUtils.fillTokens("{{token2}} test {{token1}}{{token3}}", variables);
+        const result = StringUtils.fillTokens(
+            "{{token2}} test {{token1}}{{token3}}",
+            variables
+        );
         expect(result).equal("world test hello!");
     });
 });

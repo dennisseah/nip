@@ -8,7 +8,10 @@ export class HttpRequestHelper {
         headers?: Map<string, string | number>,
         parameters?: Map<string, string | number>
     ): Promise<any> {
-        return RequestUtils.sendRequest(name, RequestUtils.createOptions(url, "GET", headers, parameters));
+        return RequestUtils.sendRequest(
+            name,
+            RequestUtils.createOptions(url, "GET", headers, parameters)
+        );
     }
     static makeDELETERequest(
         name: string,
@@ -16,7 +19,10 @@ export class HttpRequestHelper {
         headers?: Map<string, string | number>,
         parameters?: Map<string, string | number>
     ): Promise<any> {
-        return RequestUtils.sendRequest(name, RequestUtils.createOptions(url, "DELETE", headers, parameters));
+        return RequestUtils.sendRequest(
+            name,
+            RequestUtils.createOptions(url, "DELETE", headers, parameters)
+        );
     }
     static makePUTRequest(
         name: string,
@@ -25,7 +31,17 @@ export class HttpRequestHelper {
         headers?: Map<string, string | number>,
         parameters?: Map<string, string | number>
     ): Promise<any> {
-        return RequestUtils.sendRequest(name, RequestUtils.createOptions(url, "PUT", headers, parameters, payload), payload);
+        return RequestUtils.sendRequest(
+            name,
+            RequestUtils.createOptions(
+                url,
+                "PUT",
+                headers,
+                parameters,
+                payload
+            ),
+            payload
+        );
     }
     static makePOSTRequest(
         name: string,
@@ -34,6 +50,16 @@ export class HttpRequestHelper {
         headers?: Map<string, string | number>,
         parameters?: Map<string, string | number>
     ): Promise<any> {
-        return RequestUtils.sendRequest(name, RequestUtils.createOptions(url, "POST", headers, parameters, payload), payload);
+        return RequestUtils.sendRequest(
+            name,
+            RequestUtils.createOptions(
+                url,
+                "POST",
+                headers,
+                parameters,
+                payload
+            ),
+            payload
+        );
     }
 }

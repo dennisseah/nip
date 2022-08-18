@@ -18,12 +18,18 @@ describe("VariableCache list unit test", () => {
     let spyExistsSync: SinonStub;
     let spyReaddirSync: SinonStub;
     const file = new Dirent();
-    file.name = "test"
+    file.name = "test";
     const files: Dirent[] = [file];
 
     before(() => {
-        spyExistsSync = sandbox.stub(fs, "existsSync").withArgs(cacheDir).returns(true);
-        spyReaddirSync = sandbox.stub(fs, "readdirSync").withArgs(cacheDir, sinon.match.any).returns(files);
+        spyExistsSync = sandbox
+            .stub(fs, "existsSync")
+            .withArgs(cacheDir)
+            .returns(true);
+        spyReaddirSync = sandbox
+            .stub(fs, "readdirSync")
+            .withArgs(cacheDir, sinon.match.any)
+            .returns(files);
     });
 
     after(() => {
@@ -43,8 +49,13 @@ describe("VariableCache list when cache directory does not exist unit test", () 
     let spyReaddirSync: SinonStub;
 
     before(() => {
-        spyExistsSync = sandbox.stub(fs, "existsSync").withArgs(cacheDir).returns(false);
-        spyReaddirSync = sandbox.stub(fs, "readdirSync").withArgs(cacheDir, sinon.match.any);
+        spyExistsSync = sandbox
+            .stub(fs, "existsSync")
+            .withArgs(cacheDir)
+            .returns(false);
+        spyReaddirSync = sandbox
+            .stub(fs, "readdirSync")
+            .withArgs(cacheDir, sinon.match.any);
     });
 
     after(() => {
@@ -62,7 +73,10 @@ describe("VariableCache fetch unit test", () => {
     const sandbox: SinonSandbox = sinon.createSandbox();
 
     before(() => {
-        sandbox.stub(fs, "existsSync").withArgs(sinon.match.string).returns(true);
+        sandbox
+            .stub(fs, "existsSync")
+            .withArgs(sinon.match.string)
+            .returns(true);
         sandbox
             .stub(fs, "readFileSync")
             .withArgs(filename)
@@ -91,8 +105,14 @@ describe("VariableCache fetch when cache dir does not exist unit test", () => {
     let spyMkdirSync: SinonStub;
 
     before(() => {
-        sandbox.stub(fs, "existsSync").withArgs(sinon.match.string).returns(false);
-        spyReadFileSync = sandbox.stub(fs, "readFileSync").withArgs(filename).returns(JSON.stringify(Object.fromEntries(mockData)));
+        sandbox
+            .stub(fs, "existsSync")
+            .withArgs(sinon.match.string)
+            .returns(false);
+        spyReadFileSync = sandbox
+            .stub(fs, "readFileSync")
+            .withArgs(filename)
+            .returns(JSON.stringify(Object.fromEntries(mockData)));
         spyMkdirSync = sandbox.stub(fs, "mkdirSync").withArgs(cacheDir);
     });
 
@@ -115,7 +135,10 @@ describe("VariableCache clear unit test", () => {
     let spyUnlinkSync: SinonStub;
 
     before(() => {
-        spyExistSync = sandbox.stub(fs, "existsSync").withArgs(sinon.match.string).returns(true);
+        spyExistSync = sandbox
+            .stub(fs, "existsSync")
+            .withArgs(sinon.match.string)
+            .returns(true);
         spyUnlinkSync = sandbox.stub(fs, "unlinkSync").withArgs(filename);
     });
 
@@ -138,7 +161,10 @@ describe("VariableCache clear when cache does not exist unit test", () => {
     let spyUnlinkSync: SinonStub;
 
     before(() => {
-        sandbox.stub(fs, "existsSync").withArgs(sinon.match.string).returns(false);
+        sandbox
+            .stub(fs, "existsSync")
+            .withArgs(sinon.match.string)
+            .returns(false);
         spyUnlinkSync = sandbox.stub(fs, "unlinkSync").withArgs(filename);
     });
 
@@ -159,8 +185,9 @@ describe("VariableCache store unit test", () => {
     before(() => {
         sandbox.stub(fs, "existsSync").withArgs(cacheDir).returns(true);
         sandbox.stub(fs, "unlinkSync").withArgs(filename);
-        spyWriteFileSync = sandbox.stub(fs, "writeFileSync").withArgs(filename, sinon.match.string);
-
+        spyWriteFileSync = sandbox
+            .stub(fs, "writeFileSync")
+            .withArgs(filename, sinon.match.string);
     });
 
     after(() => {

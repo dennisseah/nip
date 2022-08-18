@@ -25,7 +25,10 @@ describe("Logger unit test", () => {
         expect(Logger.parseLevel("off")).equal(LogLevel.OFF);
     });
     it("parse log invalid level", () => {
-        expect(() => Logger.parseLevel("error1")).to.throw(Error, "Unknown log level, error1");
+        expect(() => Logger.parseLevel("error1")).to.throw(
+            Error,
+            "Unknown log level, error1"
+        );
     });
 });
 
@@ -50,7 +53,10 @@ describe("Logger debug unit test", () => {
     it("debug test", () => {
         Logger.setLevel(LogLevel.DEBUG);
         Logger.debug("test");
-        sinon.assert.calledWithExactly(spyConsoleLog, "\x1b[33mtest\x1b[89m\x1b[0m");
+        sinon.assert.calledWithExactly(
+            spyConsoleLog,
+            "\x1b[33mtest\x1b[89m\x1b[0m"
+        );
     });
 });
 
@@ -75,7 +81,10 @@ describe("Logger log unit test", () => {
     it("log test", () => {
         Logger.setLevel(LogLevel.INFO);
         Logger.log("test");
-        sinon.assert.calledWithExactly(spyConsoleLog, "\x1b[32mtest\x1b[89m\x1b[0m");
+        sinon.assert.calledWithExactly(
+            spyConsoleLog,
+            "\x1b[32mtest\x1b[89m\x1b[0m"
+        );
     });
 });
 
@@ -100,6 +109,9 @@ describe("Logger error unit test", () => {
     it("log test", () => {
         Logger.setLevel(LogLevel.INFO);
         Logger.error("test");
-        sinon.assert.calledWithExactly(spyConsoleLog, "\x1b[31mtest\x1b[89m\x1b[0m");
+        sinon.assert.calledWithExactly(
+            spyConsoleLog,
+            "\x1b[31mtest\x1b[89m\x1b[0m"
+        );
     });
 });

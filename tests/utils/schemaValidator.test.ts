@@ -14,6 +14,8 @@ describe("SchemaValidator unit test", () => {
     it("negative test", () => {
         const data = JSONUtils.fromFile(path.join(".", "data", "sample.json"));
         delete data.steps;
-        expect(SchemaValidator.validate(schema, data)).equals("data must have required property 'steps'");
+        expect(SchemaValidator.validate(schema, data)).equals(
+            "data must have required property 'steps'"
+        );
     });
 });

@@ -10,13 +10,14 @@ describe("RequestFile set identifier for json file unit test", () => {
         hello: "world",
         steps: [
             {
-                "name": "Fetch Products",
-                "request": {
-                    "url": "http://test.com",
-                    "method": "GET"
-                }
-            }
-    ]};
+                name: "Fetch Products",
+                request: {
+                    url: "http://test.com",
+                    method: "GET",
+                },
+            },
+        ],
+    };
     const sandbox: SinonSandbox = sinon.createSandbox();
 
     before(() => {
@@ -26,7 +27,7 @@ describe("RequestFile set identifier for json file unit test", () => {
 
     after(() => {
         sandbox.restore();
-    })
+    });
 
     it("set identifier", async () => {
         const result = RequestFile.fetch(filename);
@@ -67,7 +68,6 @@ describe("RequestFile set identifier for yaml file unit test", () => {
     });
 });
 
-
 describe("RequestFile when identifier already exist unit test", () => {
     const filename = "test.json";
     const data = {
@@ -75,13 +75,14 @@ describe("RequestFile when identifier already exist unit test", () => {
         hello: "world",
         steps: [
             {
-                "name": "Fetch Products",
-                "request": {
-                    "url": "http://test.com",
-                    "method": "GET"
-                }
-            }
-    ]};
+                name: "Fetch Products",
+                request: {
+                    url: "http://test.com",
+                    method: "GET",
+                },
+            },
+        ],
+    };
 
     const sandbox: SinonSandbox = sinon.createSandbox();
 
@@ -115,7 +116,10 @@ describe("RequestFile when data file is invalid unit test", () => {
     });
 
     it("invalid test spec", async () => {
-        expect(() => RequestFile.fetch(filename)).to.throw(Error, "Schema error: data must have required property 'steps");
+        expect(() => RequestFile.fetch(filename)).to.throw(
+            Error,
+            "Schema error: data must have required property 'steps"
+        );
     });
 });
 
@@ -124,6 +128,8 @@ describe("RequestFile when data file has invalid extension unit test", () => {
 
     it("identifier file extension", async () => {
         expect(() => RequestFile.fetch(filename)).to.throw(
-            Error, `Invalid file extension ${filename}`);
+            Error,
+            `Invalid file extension ${filename}`
+        );
     });
 });

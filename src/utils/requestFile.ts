@@ -3,7 +3,7 @@ import { Request } from "../request";
 import { SchemaValidator } from "./schemaValidator";
 import { YAMLUtils } from "./yamlUtils";
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
 
 export class RequestFile {
@@ -27,7 +27,9 @@ export class RequestFile {
 
     private static fetchData(path: string) {
         if (path.endsWith(".json") || path.endsWith(".yaml")) {
-            const data = path.endsWith(".json") ? JSONUtils.fromFile(path) : YAMLUtils.fromFile(path);
+            const data = path.endsWith(".json")
+                ? JSONUtils.fromFile(path)
+                : YAMLUtils.fromFile(path);
             if (!data.id) {
                 data.id = uuidv4();
             }

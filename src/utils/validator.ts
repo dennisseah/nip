@@ -28,15 +28,27 @@ export interface ValidateMapValuesParameters {
 export class Validator {
     static validate(obj: any, type: string, parameters: any) {
         if (type === "validateStringValue") {
-            this.validateStringValue(obj, parameters as ValidateStringValueParameters);
+            this.validateStringValue(
+                obj,
+                parameters as ValidateStringValueParameters
+            );
         } else if (type === "validateNumericValue") {
-            this.validateNumericValue(obj, parameters as ValidateNumericValueParameters);
+            this.validateNumericValue(
+                obj,
+                parameters as ValidateNumericValueParameters
+            );
         } else if (type === "validateExist") {
             this.validateExist(obj, parameters as ValidateExistParameters);
         } else if (type === "validateArraySize") {
-            this.validateArraySize(obj, parameters as ValidateArraySizeParameters);
+            this.validateArraySize(
+                obj,
+                parameters as ValidateArraySizeParameters
+            );
         } else if (type === "validateMapValues") {
-            this.validateMapValues(obj, parameters as ValidateMapValuesParameters);
+            this.validateMapValues(
+                obj,
+                parameters as ValidateMapValuesParameters
+            );
         } else {
             throw new Error(`Unknown validation type, ${type}`);
         }
@@ -55,7 +67,10 @@ export class Validator {
             );
         }
     }
-    private static validateNumericValue(obj: any, parameters: ValidateNumericValueParameters) {
+    private static validateNumericValue(
+        obj: any,
+        parameters: ValidateNumericValueParameters
+    ) {
         const path = parameters.path;
         const expectedVal = parameters.expectedVal;
         const test = this.matchPath(obj, path)[0] as number;
@@ -66,7 +81,10 @@ export class Validator {
             );
         }
     }
-    private static validateArraySize(obj: any, parameters: ValidateArraySizeParameters) {
+    private static validateArraySize(
+        obj: any,
+        parameters: ValidateArraySizeParameters
+    ) {
         const path = parameters.path;
         const expectedVal = parameters.expectedVal;
         const test = this.matchPath(obj, path)[0] as Array<any>;
@@ -77,7 +95,10 @@ export class Validator {
             );
         }
     }
-    private static validateMapValues(obj: any, parameters: ValidateMapValuesParameters) {
+    private static validateMapValues(
+        obj: any,
+        parameters: ValidateMapValuesParameters
+    ) {
         const path = parameters.path;
         const valuePath = parameters.valuePath;
         const expectedVal = parameters.expectedVal;
@@ -99,7 +120,10 @@ export class Validator {
             throw new Error("validateMapValues function failed");
         }
     }
-    private static validateExist(obj: any, parameters: ValidateExistParameters) {
+    private static validateExist(
+        obj: any,
+        parameters: ValidateExistParameters
+    ) {
         return this.matchPath(obj, parameters.path).length > 0;
     }
 

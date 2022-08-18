@@ -10,7 +10,10 @@ describe("JSONUtils fromFile positive unit test", () => {
 
     before(() => {
         sandbox.stub(fs, "existsSync").withArgs(filename).returns(true);
-        sandbox.stub(fs, "readFileSync").withArgs(filename).returns(JSON.stringify(data));
+        sandbox
+            .stub(fs, "readFileSync")
+            .withArgs(filename)
+            .returns(JSON.stringify(data));
     });
 
     after(() => {
@@ -20,7 +23,6 @@ describe("JSONUtils fromFile positive unit test", () => {
     it("Get JSON from a file then OK", async () => {
         const result = JSONUtils.fromFile(filename);
         expect(result).to.deep.equal(data);
-
     });
 });
 
@@ -29,7 +31,7 @@ describe("JSONUtils toFile positive unit test", () => {
     const data = { hello: "world" };
     const sandbox: SinonSandbox = sinon.createSandbox();
     let cbSpy: SinonStub;
-        
+
     before(() => {
         cbSpy = sandbox
             .stub(fs, "writeFileSync")
@@ -56,7 +58,7 @@ describe("JSONUtils fromFile negative unit test", () => {
 
     after(() => {
         sandbox.restore();
-    })
+    });
 
     it("Get JSON from a file that does not exist then err", async () => {
         expect(() => JSONUtils.fromFile(filename)).to.throw(Error);
