@@ -1,0 +1,111 @@
+{
+    "steps": [
+        {
+            "name": "Act: Create Job",
+            "request": {
+                "url": "{{host}}/jobs",
+                "method": "POST",
+                "json": {
+                    "description": "job {{$randomInt}}"
+                }
+            },
+            "validations": [
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.jobId"
+                    }
+                }
+            ],
+            "variables": {
+                "jobId": "$.jobId"
+            }
+        },
+        {
+            "name": "Asset: Get New Job",
+            "request": {
+                "url": "{{host}}/jobs/{{jobId}}",
+                "method": "GET"
+            },
+            "validations": [
+                {
+                    "type": "validateStringValue",
+                    "parameters": {
+                        "path": "$.jobId",
+                        "expectedVal": "{{jobId}}"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.creationTime"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.description"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.processId"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.processStartTime"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.processEndTime"
+                    }
+                },
+                {
+                    "type": "validateBooleanValue",
+                    "parameters": {
+                        "path": "$.isComplete",
+                        "expectedVal": false
+                    }
+                }
+            ]
+        }
+    ],
+    "teardowns": [
+        {
+            "name": "Teardown: Delete job",
+            "request": {
+                "url": "{{host}}/jobs/{{jobId}}",
+                "method": "DELETE"
+            }
+        },
+        {
+            "name": "Teardown: Confirm job deletion",
+            "request": {
+                "url": "{{host}}/jobs/{{jobId}}",
+                "method": "GET"
+            },
+            "validations": [
+                {
+                    "type": "validateHTTPCode",
+                    "parameters": {
+                        "expectedVal": 404
+                    }
+                }
+            ]
+        }
+    ],
+    "authentication": {
+        "apiKeys": {
+            "Authorization": "{{asyncdemo_token}}"
+        }
+    },
+    "variables": {
+        "host": "https://localhost:7035"
+    },
+    "id": "aecaa6ce-724c-4d22-83b8-d742be901b17"
+}

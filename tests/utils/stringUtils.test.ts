@@ -8,6 +8,14 @@ describe("StringUtils unit test", () => {
         ["token3", "!"],
     ]);
 
+    it("fill randomInt", () => {
+        const result = StringUtils.fillTokens("{{$randomInt}}", variables);
+        expect(parseInt(result, 10)).greaterThan(0);
+    });
+    it("fill invalid generator value", () => {
+        const result = StringUtils.fillTokens("{{$unknown}}", variables);
+        expect(result).equals("{{$unknown}}");
+    });
     it("fill none", () => {
         const result = StringUtils.fillTokens("test", variables);
         expect(result).equal("test");

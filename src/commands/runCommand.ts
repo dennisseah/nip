@@ -89,6 +89,10 @@ export class RunCommand extends TestCommandBase {
                     let completed = false;
 
                     while (!completed) {
+                        this.populateVariables(
+                            item.preRequestVariables,
+                            data.variables
+                        );
                         const result = await this.makeRequest(
                             item,
                             data.authentication,
@@ -98,6 +102,7 @@ export class RunCommand extends TestCommandBase {
                         completed = this.polling(result, item.poll);
 
                         if (completed) {
+                            // completed polling
                             if (result) {
                                 Logger.log(JSON.stringify(result, null, 2));
                             }
@@ -110,6 +115,10 @@ export class RunCommand extends TestCommandBase {
                                 data.variables,
                                 result.body,
                                 item.variables
+                            );
+                            completed = this.repeat(
+                                item.repeat,
+                                data.variables
                             );
                         } else {
                             Logger.log("wait for one minute...");

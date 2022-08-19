@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceFolder}/src/cli.ts",
-            "args": ["run", "-f", "create-jobs.json"],
+            "args": ["run", "-f", "create-multiple-jobs.json", "-t"],
             "preLaunchTask": "tsc: build - tsconfig.json",
             "env": {
                 "asyncdemo_token": "foo"

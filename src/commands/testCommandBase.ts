@@ -9,6 +9,7 @@ import { env } from "process";
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 import { Poller } from "../utils/poller";
 import { WebResponse } from "../utils/requestUtils";
+import { StringUtils } from "../utils/stringUtils";
 
 export abstract class TestCommandBase extends CommandBase {
     protected extractVariables(
@@ -23,12 +24,28 @@ export abstract class TestCommandBase extends CommandBase {
                     path: vars.get(k),
                     json: result,
                 } as JSONPathOptions);
+
                 if (val.length === 1) {
-                    variables.set(k, val[0]);
+                    variables.set(StringUtils.fillTokens(k, variables), val[0]);
                 }
             });
         }
     }
+    protected populateVariables(
+        incoming: Map<string, string>,
+        variables: Map<string, string>
+    ): void {
+        if (incoming) {
+            const vars = new Map(Object.entries(incoming));
+            [...vars.keys()].forEach((k) => {
+                variables.set(
+                    k,
+                    StringUtils.fillTokens(vars.get(k), variables)
+                );
+            });
+        }
+    }
+
     protected dumpVariables(id: string, variables: Map<string, string>): void {
         const envKeys = [...Object.keys(env)];
         const keepKeys = [...variables.keys()].filter(
@@ -58,5 +75,26 @@ export abstract class TestCommandBase extends CommandBase {
     }
     protected polling(result: any, poll: request.RequestItemPoll): boolean {
         return poll ? Poller.poll(result, poll.type, poll.path) : true;
+    }
+    protected repeat(
+        repeat: request.RequestItemRepeat,
+        variables: Map<string, string>
+    ): boolean {
+        if (repeat && variables) {
+            const counterVar = repeat.counterVariable;
+            const strCounter = variables.has(counterVar)
+                ? variables.get(counterVar)
+                : "0";
+            if (strCounter !== undefined) {
+                const count = parseInt(strCounter, 10);
+                if (count >= repeat.total - 1) {
+                    variables.set(counterVar, "0");
+                    return true;
+                }
+                variables.set(counterVar, (count + 1).toString());
+                return false;
+            }
+        }
+        return true;
     }
 }

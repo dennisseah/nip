@@ -1,13 +1,17 @@
 {
     "steps": [
         {
-            "name": "Act: Create Job",
+            "name": "Act: Create Jobs",
             "request": {
                 "url": "{{host}}/jobs",
                 "method": "POST",
                 "json": {
-                    "description": "job "
+                    "description": "job {{$randomInt}}"
                 }
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
             },
             "validations": [
                 {
@@ -18,21 +22,28 @@
                 }
             ],
             "variables": {
-                "jobId": "$.jobId"
+                "jobId_{{job_count}}": "$.jobId"
             }
         },
         {
-            "name": "Asset: Get New Job",
+            "name": "Asset: Get New Jobs",
             "request": {
-                "url": "{{host}}/jobs/{{jobId}}",
+                "url": "{{host}}/jobs/{{fetch_jobId}}",
                 "method": "GET"
+            },
+            "preRequestVariables": {
+                "fetch_jobId": "{{jobId_{{job_count}}}}"
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
             },
             "validations": [
                 {
                     "type": "validateStringValue",
                     "parameters": {
                         "path": "$.jobId",
-                        "expectedVal": "{{jobId}}"
+                        "expectedVal": "{{fetch_jobId}}"
                     }
                 },
                 {
@@ -77,17 +88,31 @@
     ],
     "teardowns": [
         {
-            "name": "Teardown: Delete job",
+            "name": "Teardown: Delete jobs",
             "request": {
-                "url": "{{host}}/jobs/{{jobId}}",
+                "url": "{{host}}/jobs/{{fetch_jobId}}",
                 "method": "DELETE"
+            },
+            "preRequestVariables": {
+                "fetch_jobId": "{{jobId_{{job_count}}}}"
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
             }
         },
         {
-            "name": "Teardown: Confirm job deletion",
+            "name": "Teardown: Confirm jobs deletion",
             "request": {
-                "url": "{{host}}/jobs/{{jobId}}",
+                "url": "{{host}}/jobs/{{fetch_jobId}}",
                 "method": "GET"
+            },
+            "preRequestVariables": {
+                "fetch_jobId": "{{jobId_{{job_count}}}}"
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
             },
             "validations": [
                 {
@@ -105,7 +130,8 @@
         }
     },
     "variables": {
-        "host": "https://localhost:7035"
+        "host": "https://localhost:7035",
+        "job_count": "0"
     },
-    "id": "aecaa6ce-724c-4d22-83b8-d742be901b17"
+    "id": "580e6b50-a77f-477e-99a4-1600b09ddee8"
 }

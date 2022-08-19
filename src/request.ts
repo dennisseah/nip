@@ -19,6 +19,11 @@ export interface RequestItemRequest {
     json?: any;
 }
 
+export interface RequestItemRepeat {
+    counterVariable: string;
+    total: number;
+}
+
 export interface RequestItemPoll {
     type: "bool_true" | "bool_false" | "empty_list";
     path?: string;
@@ -46,6 +51,8 @@ export interface RequestItemValidation {
 export interface RequestItem {
     name: string;
     request: RequestItemRequest;
+    preRequestVariables: Map<string, string>;
+    repeat: RequestItemRepeat;
     variables: Map<string, string>;
     poll: RequestItemPoll;
     validations: RequestItemValidation[];

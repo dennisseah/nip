@@ -39,9 +39,25 @@
                 "request": {
                     "$ref": "#/definitions/step-request"
                 },
+                "preRequestVariables": {
+                    "type": "object",
+                    "additionalProperties": { "type": ["string"] }
+                },
+                "repeat": {
+                    "$ref": "#/definitions/step-repeat"
+                },
+                "poll": {
+                    "$ref": "#/definitions/step-poll"
+                },
+                "validations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/step-validation"
+                    }
+                },
                 "variables": {
                     "type": "object",
-                    "additionalProperties": { "type": "string" }
+                    "additionalProperties": { "type": ["string"] }
                 }
             },
             "required": ["name", "request"]
@@ -59,18 +75,21 @@
                     "type": "object",
                     "additionalProperties": { "type": ["string", "number"] }
                 },
-                "json": {},
-                "poll": {
-                    "$ref": "#/definitions/step-poll"
-                },
-                "validations": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/step-validation"
-                    }
-                }
+                "json": {}
             },
             "required": ["url", "method"]
+        },
+        "step-repeat": {
+            "type": "object",
+            "properties": {
+                "counterVariable": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "number"
+                }
+            },
+            "required": ["counterVariable", "total"]
         },
         "step-poll": {
             "type": "object",
