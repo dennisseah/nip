@@ -6,7 +6,7 @@
                 "url": "{{host}}/jobs",
                 "method": "POST",
                 "json": {
-                    "description": "job {{$randomInt}}"
+                    "description": "job {{$randomColor}}-{{$randomInt}}"
                 }
             },
             "validations": [

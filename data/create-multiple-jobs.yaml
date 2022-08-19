@@ -1,0 +1,79 @@
+steps:
+  - name: 'Act: Create Jobs'
+    request:
+      url: '{{host}}/jobs'
+      method: POST
+      json:
+        description: job {{$randomColor}}-{{$randomInt}}
+    repeat:
+      counterVariable: job_count
+      total: 10
+    validations:
+      - type: validateExist
+        parameters:
+          path: $.jobId
+    variables:
+      jobId_{{job_count}}: $.jobId
+  - name: 'Asset: Get New Jobs'
+    request:
+      url: '{{host}}/jobs/{{fetch_jobId}}'
+      method: GET
+    preRequestVariables:
+      fetch_jobId: '{{jobId_{{job_count}}}}'
+    repeat:
+      counterVariable: job_count
+      total: 10
+    validations:
+      - type: validateStringValue
+        parameters:
+          path: $.jobId
+          expectedVal: '{{fetch_jobId}}'
+      - type: validateExist
+        parameters:
+          path: $.creationTime
+      - type: validateExist
+        parameters:
+          path: $.description
+      - type: validateExist
+        parameters:
+          path: $.processId
+      - type: validateExist
+        parameters:
+          path: $.processStartTime
+      - type: validateExist
+        parameters:
+          path: $.processEndTime
+      - type: validateBooleanValue
+        parameters:
+          path: $.isComplete
+          expectedVal: false
+teardowns:
+  - name: 'Teardown: Delete jobs'
+    request:
+      url: '{{host}}/jobs/{{fetch_jobId}}'
+      method: DELETE
+    preRequestVariables:
+      fetch_jobId: '{{jobId_{{job_count}}}}'
+    repeat:
+      counterVariable: job_count
+      total: 10
+  - name: 'Teardown: Confirm jobs deletion'
+    request:
+      url: '{{host}}/jobs/{{fetch_jobId}}'
+      method: GET
+    preRequestVariables:
+      fetch_jobId: '{{jobId_{{job_count}}}}'
+    repeat:
+      counterVariable: job_count
+      total: 10
+    validations:
+      - type: validateHTTPCode
+        parameters:
+          expectedVal: 404
+authentication:
+  apiKeys:
+    Authorization: '{{asyncdemo_token}}'
+variables:
+  host: https://localhost:7035
+  job_count: '0'
+id: c2c4a291-a29e-4081-b0ac-ea9cbf638055
