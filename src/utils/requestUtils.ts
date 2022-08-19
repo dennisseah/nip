@@ -2,20 +2,28 @@ import { Logger } from "./logger";
 import * as https from "https";
 import * as http from "http";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class WebResponse {
+    public statusCode: number | undefined;
+    public body?: any;
+
+    public constructor(statusCode: number, body?: any) {
+        this.statusCode = statusCode;
+        this.body = body;
+    }
+}
 export class RequestUtils {
     static async sendRequest(
         name: string,
         options: https.RequestOptions,
         payload?: string | undefined
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ): Promise<any> {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return new Promise<any>((resolve, reject) => {
+    ): Promise<WebResponse> {
+        return new Promise<WebResponse>((resolve, reject) => {
             const req = https.request(options, (res) => {
                 const statusCode: number = this.handleResponse(res) || 400;
 
                 if (statusCode > 299) {
-                    reject(`problem with request, status code: ${statusCode}`);
+                    resolve(new WebResponse(statusCode));
                 }
 
                 let body = "";
@@ -24,7 +32,8 @@ export class RequestUtils {
                 });
 
                 res.on("end", () => {
-                    resolve(this.isJSONBody(res) ? JSON.parse(body) : body);
+                    const resp = this.isJSONBody(res) ? JSON.parse(body) : body;
+                    resolve(new WebResponse(statusCode, resp));
                 });
             });
             req.on("error", (e) => {

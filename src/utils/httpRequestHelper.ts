@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RequestUtils } from "./requestUtils";
+import { RequestUtils, WebResponse } from "./requestUtils";
 
 export class HttpRequestHelper {
     static makeGETRequest(
@@ -7,7 +7,7 @@ export class HttpRequestHelper {
         url: URL,
         headers?: Map<string, string | number>,
         parameters?: Map<string, string | number>
-    ): Promise<any> {
+    ): Promise<WebResponse> {
         return RequestUtils.sendRequest(
             name,
             RequestUtils.createOptions(url, "GET", headers, parameters)
@@ -18,7 +18,7 @@ export class HttpRequestHelper {
         url: URL,
         headers?: Map<string, string | number>,
         parameters?: Map<string, string | number>
-    ): Promise<any> {
+    ): Promise<WebResponse> {
         return RequestUtils.sendRequest(
             name,
             RequestUtils.createOptions(url, "DELETE", headers, parameters)
@@ -30,7 +30,7 @@ export class HttpRequestHelper {
         payload: string | undefined,
         headers?: Map<string, string | number>,
         parameters?: Map<string, string | number>
-    ): Promise<any> {
+    ): Promise<WebResponse> {
         return RequestUtils.sendRequest(
             name,
             RequestUtils.createOptions(
@@ -49,7 +49,7 @@ export class HttpRequestHelper {
         payload: string | undefined,
         headers?: Map<string, string | number>,
         parameters?: Map<string, string | number>
-    ): Promise<any> {
+    ): Promise<WebResponse> {
         return RequestUtils.sendRequest(
             name,
             RequestUtils.createOptions(

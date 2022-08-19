@@ -13,6 +13,7 @@ import * as path from "path";
 import { Promise } from "bluebird";
 import { env } from "process";
 import { TestCommandBase } from "./testCommandBase";
+import { WebResponse } from "../utils/requestUtils";
 
 export class RunCommand extends TestCommandBase {
     protected getCommandName(): string {
@@ -100,10 +101,14 @@ export class RunCommand extends TestCommandBase {
                             if (result) {
                                 Logger.log(JSON.stringify(result, null, 2));
                             }
-                            this.validate(result, item.validations);
+                            this.validate(
+                                result,
+                                item.validations,
+                                data.variables
+                            );
                             this.extractVariables(
                                 data.variables,
-                                result,
+                                result.body,
                                 item.variables
                             );
                         } else {
@@ -127,7 +132,7 @@ export class RunCommand extends TestCommandBase {
         item: request.RequestItem,
         authentication: request.RequestAuthentication,
         variables: Map<string, string>
-    ): Promise<any> {
+    ): Promise<WebResponse> {
         const url = new URL(
             StringUtils.fillTokens(item.request.url, variables)
         );

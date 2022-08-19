@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
+import { WebResponse } from "./requestUtils";
+import { StringUtils } from "./stringUtils";
 
 export interface ValidateStringValueParameters {
     path: string;
@@ -8,6 +10,15 @@ export interface ValidateStringValueParameters {
 }
 export interface ValidateNumericValueParameters {
     path: string;
+    expectedVal: number;
+}
+
+export interface ValidateBooleanValueParameters {
+    path: string;
+    expectedVal: boolean;
+}
+
+export interface ValidateHTTPCodeParameters {
     expectedVal: number;
 }
 export interface ValidateExistParameters {
@@ -26,16 +37,32 @@ export interface ValidateMapValuesParameters {
 }
 
 export class Validator {
-    static validate(obj: any, type: string, parameters: any) {
+    static validate(
+        obj: WebResponse,
+        type: string,
+        parameters: any,
+        variables: Map<string, string> = new Map()
+    ) {
         if (type === "validateStringValue") {
             this.validateStringValue(
                 obj,
-                parameters as ValidateStringValueParameters
+                parameters as ValidateStringValueParameters,
+                variables
             );
         } else if (type === "validateNumericValue") {
             this.validateNumericValue(
                 obj,
                 parameters as ValidateNumericValueParameters
+            );
+        } else if (type === "validateBooleanValue") {
+            this.validateBooleanValue(
+                obj,
+                parameters as ValidateBooleanValueParameters
+            );
+        } else if (type === "validateHTTPCode") {
+            this.validateHTTPCode(
+                obj,
+                parameters as ValidateHTTPCodeParameters
             );
         } else if (type === "validateExist") {
             this.validateExist(obj, parameters as ValidateExistParameters);
@@ -54,12 +81,16 @@ export class Validator {
         }
     }
     private static validateStringValue(
-        obj: any,
-        parameters: ValidateStringValueParameters
+        response: WebResponse,
+        parameters: ValidateStringValueParameters,
+        variables: Map<string, string>
     ) {
         const path = parameters.path;
-        const expectedVal = parameters.expectedVal;
-        const test = this.matchPath(obj, path)[0] as string;
+        const expectedVal = StringUtils.fillTokens(
+            parameters.expectedVal,
+            variables
+        );
+        const test = this.matchPath(response.body, path)[0] as string;
 
         if (test !== expectedVal) {
             throw new Error(
@@ -68,12 +99,12 @@ export class Validator {
         }
     }
     private static validateNumericValue(
-        obj: any,
+        response: WebResponse,
         parameters: ValidateNumericValueParameters
     ) {
         const path = parameters.path;
         const expectedVal = parameters.expectedVal;
-        const test = this.matchPath(obj, path)[0] as number;
+        const test = this.matchPath(response.body, path)[0] as number;
 
         if (test !== expectedVal) {
             throw new Error(
@@ -81,13 +112,39 @@ export class Validator {
             );
         }
     }
+    private static validateBooleanValue(
+        response: WebResponse,
+        parameters: ValidateBooleanValueParameters
+    ) {
+        const path = parameters.path;
+        const expectedVal = parameters.expectedVal;
+        const test = this.matchPath(response.body, path)[0] as boolean;
+
+        if (test !== expectedVal) {
+            throw new Error(
+                `validateBooleanValue function failed. expected ${expectedVal} but got ${test}`
+            );
+        }
+    }
+    private static validateHTTPCode(
+        response: WebResponse,
+        parameters: ValidateHTTPCodeParameters
+    ) {
+        const expectedVal = parameters.expectedVal;
+
+        if (response.statusCode !== expectedVal) {
+            throw new Error(
+                `validateHTTPCode function failed. expected ${expectedVal} but got ${response.statusCode}`
+            );
+        }
+    }
     private static validateArraySize(
-        obj: any,
+        response: WebResponse,
         parameters: ValidateArraySizeParameters
     ) {
         const path = parameters.path;
         const expectedVal = parameters.expectedVal;
-        const test = this.matchPath(obj, path)[0] as Array<any>;
+        const test = this.matchPath(response.body, path)[0] as Array<any>;
 
         if (test.length !== expectedVal) {
             throw new Error(
@@ -96,7 +153,7 @@ export class Validator {
         }
     }
     private static validateMapValues(
-        obj: any,
+        response: WebResponse,
         parameters: ValidateMapValuesParameters
     ) {
         const path = parameters.path;
@@ -104,7 +161,7 @@ export class Validator {
         const expectedVal = parameters.expectedVal;
         const all = parameters.all;
 
-        const target = this.matchPath(obj, path);
+        const target = this.matchPath(response.body, path);
 
         const allMatch = Object.values(target[0]).every((val) => {
             const mapVal = JSONPath({
@@ -121,14 +178,17 @@ export class Validator {
         }
     }
     private static validateExist(
-        obj: any,
+        response: WebResponse,
         parameters: ValidateExistParameters
     ) {
-        return this.matchPath(obj, parameters.path).length > 0;
+        return this.matchPath(response.body, parameters.path).length > 0;
     }
 
     private static matchPath(obj: any, path: string) {
-        const target = JSONPath({ path: path, json: obj } as JSONPathOptions);
+        const target = JSONPath({
+            path: path,
+            json: obj,
+        } as JSONPathOptions);
         if (target.length === 0) {
             throw new Error(
                 `validation function failed, path, ${path} does not resolve to any value`

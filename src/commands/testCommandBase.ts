@@ -8,6 +8,7 @@ import * as request from "../request";
 import { env } from "process";
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 import { Poller } from "../utils/poller";
+import { WebResponse } from "../utils/requestUtils";
 
 export abstract class TestCommandBase extends CommandBase {
     protected extractVariables(
@@ -40,15 +41,17 @@ export abstract class TestCommandBase extends CommandBase {
         VariableCache.store(id, dict);
     }
     protected validate(
-        result: any,
-        validations: request.RequestItemValidation[]
+        result: WebResponse,
+        validations: request.RequestItemValidation[],
+        variables: Map<string, string>
     ): void {
         if (validations) {
             validations.forEach((validation) =>
                 Validator.validate(
                     result,
                     validation.type,
-                    validation.parameters
+                    validation.parameters,
+                    variables
                 )
             );
         }

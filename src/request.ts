@@ -1,8 +1,10 @@
 import {
     ValidateArraySizeParameters,
     ValidateExistParameters,
+    ValidateHTTPCodeParameters,
     ValidateMapValuesParameters,
     ValidateNumericValueParameters,
+    ValidateBooleanValueParameters,
     ValidateStringValueParameters,
 } from "./utils/validator";
 
@@ -27,12 +29,16 @@ export interface RequestItemValidation {
         | "validateMapValues"
         | "validateStringValue"
         | "validateNumericValue"
+        | "validateBooleanValue"
+        | "validateHTTPCode"
         | "validateArraySize"
         | "validateExist";
     parameters:
         | ValidateMapValuesParameters
         | ValidateStringValueParameters
         | ValidateNumericValueParameters
+        | ValidateBooleanValueParameters
+        | ValidateHTTPCodeParameters
         | ValidateArraySizeParameters
         | ValidateExistParameters;
 }
