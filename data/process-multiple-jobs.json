@@ -1,0 +1,168 @@
+{
+    "steps": [
+        {
+            "name": "Act: Create Jobs",
+            "request": {
+                "url": "{{host}}/jobs",
+                "method": "POST",
+                "json": {
+                    "description": "job {{$randomInt}}"
+                }
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
+            },
+            "validations": [
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.jobId"
+                    }
+                }
+            ],
+            "variables": {
+                "jobId_{{job_count}}": "$.jobId"
+            }
+        },
+        {
+            "name": "Act: Start process for jobs",
+            "request": {
+                "url": "{{host}}/jobs/{{fetch_jobId}}/process",
+                "method": "POST"
+            },
+            "preRequestVariables": {
+                "fetch_jobId": "{{jobId_{{job_count}}}}"
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
+            },
+            "validations": [
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.processId"
+                    }
+                }
+            ],
+            "variables": {
+                "processId_{{job_count}}": "$.processId"
+            }
+        },
+        {
+            "name": "Asset: Get New Jobs",
+            "request": {
+                "url": "{{host}}/jobs/{{fetch_jobId}}",
+                "method": "GET"
+            },
+            "preRequestVariables": {
+                "fetch_jobId": "{{jobId_{{job_count}}}}",
+                "fetch_processId": "{{processId_{{job_count}}}}"
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
+            },
+            "poll": {
+                "type": "bool_true",
+                "path": "$.isComplete"
+            },
+            "validations": [
+                {
+                    "type": "validateStringValue",
+                    "parameters": {
+                        "path": "$.jobId",
+                        "expectedVal": "{{fetch_jobId}}"
+                    }
+                },
+                {
+                    "type": "validateStringValue",
+                    "parameters": {
+                        "path": "$.processId",
+                        "expectedVal": "{{fetch_processId}}"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.creationTime"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.description"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.processStartTime"
+                    }
+                },
+                {
+                    "type": "validateExist",
+                    "parameters": {
+                        "path": "$.processEndTime"
+                    }
+                },
+                {
+                    "type": "validateBooleanValue",
+                    "parameters": {
+                        "path": "$.isComplete",
+                        "expectedVal": true
+                    }
+                }
+            ]
+        }
+    ],
+    "teardowns": [
+        {
+            "name": "Teardown: Delete jobs",
+            "request": {
+                "url": "{{host}}/jobs/{{fetch_jobId}}",
+                "method": "DELETE"
+            },
+            "preRequestVariables": {
+                "fetch_jobId": "{{jobId_{{job_count}}}}"
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
+            }
+        },
+        {
+            "name": "Teardown: Confirm jobs deletion",
+            "request": {
+                "url": "{{host}}/jobs/{{fetch_jobId}}",
+                "method": "GET"
+            },
+            "preRequestVariables": {
+                "fetch_jobId": "{{jobId_{{job_count}}}}"
+            },
+            "repeat": {
+                "counterVariable": "job_count",
+                "total": 10
+            },
+            "validations": [
+                {
+                    "type": "validateHTTPCode",
+                    "parameters": {
+                        "expectedVal": 404
+                    }
+                }
+            ]
+        }
+    ],
+    "authentication": {
+        "apiKeys": {
+            "Authorization": "{{asyncdemo_token}}"
+        }
+    },
+    "variables": {
+        "host": "https://localhost:7035",
+        "job_count": "0"
+    },
+    "id": "580e6b50-a77f-477e-99a4-1600b09ddee8"
+}

@@ -93,27 +93,30 @@ export class RunCommand extends TestCommandBase {
                             item.preRequestVariables,
                             data.variables
                         );
-                        const result = await this.makeRequest(
+                        const response = await this.makeRequest(
                             item,
                             data.authentication,
                             data.variables
                         );
-                        Logger.debug(JSON.stringify(result, null, 2));
-                        completed = this.polling(result, item.poll);
+                        const responseBody = response.body;
+                        Logger.debug(JSON.stringify(responseBody, null, 2));
+                        completed = this.polling(responseBody, item.poll);
 
                         if (completed) {
                             // completed polling
-                            if (result) {
-                                Logger.log(JSON.stringify(result, null, 2));
+                            if (responseBody) {
+                                Logger.log(
+                                    JSON.stringify(responseBody, null, 2)
+                                );
                             }
                             this.validate(
-                                result,
+                                response,
                                 item.validations,
                                 data.variables
                             );
                             this.extractVariables(
                                 data.variables,
-                                result.body,
+                                responseBody,
                                 item.variables
                             );
                             completed = this.repeat(
