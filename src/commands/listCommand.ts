@@ -9,9 +9,7 @@ export class ListCommand extends CommandBase {
         return "list";
     }
     protected addOptions(cmd: Command): Command {
-        return super
-            .addOptions(cmd)
-            .option("-d --datadir <datadir>", "data folder name.");
+        return super.addOptions(cmd).option("-d --datadir <datadir>", "data folder name.");
     }
     protected doAction(): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

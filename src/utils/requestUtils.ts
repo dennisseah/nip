@@ -76,9 +76,7 @@ export class RequestUtils {
 
         return options;
     }
-    private static handleResponse(
-        res: http.IncomingMessage
-    ): number | undefined {
+    private static handleResponse(res: http.IncomingMessage): number | undefined {
         Logger.debug(`STATUS: ${res.statusCode}`);
         Logger.debug(`HEADERS: ${JSON.stringify(res.headers)}`);
         res.setEncoding("utf8");

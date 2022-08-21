@@ -33,13 +33,7 @@ export class HttpRequestHelper {
     ): Promise<WebResponse> {
         return RequestUtils.sendRequest(
             name,
-            RequestUtils.createOptions(
-                url,
-                "PUT",
-                headers,
-                parameters,
-                payload
-            ),
+            RequestUtils.createOptions(url, "PUT", headers, parameters, payload),
             payload
         );
     }
@@ -52,13 +46,7 @@ export class HttpRequestHelper {
     ): Promise<WebResponse> {
         return RequestUtils.sendRequest(
             name,
-            RequestUtils.createOptions(
-                url,
-                "POST",
-                headers,
-                parameters,
-                payload
-            ),
+            RequestUtils.createOptions(url, "POST", headers, parameters, payload),
             payload
         );
     }

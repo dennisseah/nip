@@ -59,9 +59,7 @@ export abstract class CommandBase implements CommandHandler {
         const milliSeconds = end - start;
 
         if (milliSeconds < 1000) {
-            Logger.log(
-                `\ntime taken: ${Math.round(milliSeconds)} milliseconds.`
-            );
+            Logger.log(`\ntime taken: ${Math.round(milliSeconds)} milliseconds.`);
             return;
         }
         const seconds = milliSeconds / 1000;

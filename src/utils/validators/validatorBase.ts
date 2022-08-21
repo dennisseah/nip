@@ -5,11 +5,7 @@ import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 import { WebResponse } from "../requestUtils";
 
 export class ValidatorBase {
-    public validate(
-        response: WebResponse,
-        parameters: any,
-        variables: Map<string, string>
-    ): void {
+    public validate(response: WebResponse, parameters: any, variables: Map<string, string>): void {
         throw new Error("not implemented");
     }
 

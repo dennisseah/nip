@@ -41,9 +41,7 @@ export class RunCommand extends TestCommandBase {
         const data = RequestFile.fetch(path.join(dataDir, filename));
 
         data.variables = new Map(Object.entries(data.variables));
-        Object.keys(env).forEach((k) =>
-            data.variables.set(k, env[k]!.toString())
-        );
+        Object.keys(env).forEach((k) => data.variables.set(k, env[k]!.toString()));
 
         if (!restart) {
             const cachedVariables = VariableCache.fetch(data.id);
@@ -55,9 +53,7 @@ export class RunCommand extends TestCommandBase {
         }
 
         if (data.authentication && data.authentication.apiKeys) {
-            data.authentication.apiKeys = new Map(
-                Object.entries(data.authentication.apiKeys)
-            );
+            data.authentication.apiKeys = new Map(Object.entries(data.authentication.apiKeys));
         }
 
         const steps = teardown ? data.teardowns : data.steps;
@@ -89,10 +85,7 @@ export class RunCommand extends TestCommandBase {
                     let completed = false;
 
                     while (!completed) {
-                        this.populateVariables(
-                            item.preRequestVariables,
-                            data.variables
-                        );
+                        this.populateVariables(item.preRequestVariables, data.variables);
                         const response = await this.makeRequest(
                             item,
                             data.authentication,
@@ -105,31 +98,14 @@ export class RunCommand extends TestCommandBase {
                         if (completed) {
                             // completed polling
                             if (responseBody) {
-                                Logger.log(
-                                    JSON.stringify(responseBody, null, 2)
-                                );
+                                Logger.log(JSON.stringify(responseBody, null, 2));
                             }
-                            this.validate(
-                                response,
-                                item.validations,
-                                data.variables
-                            );
-                            this.extractVariables(
-                                data.variables,
-                                responseBody,
-                                item.variables
-                            );
-                            completed = this.repeat(
-                                item.repeat,
-                                data.variables
-                            );
+                            this.validate(response, item.validations, data.variables);
+                            this.extractVariables(data.variables, responseBody, item.variables);
+                            completed = this.repeat(item.repeat, data.variables);
                         } else {
-                            Logger.log(
-                                `wait for ${item.poll.durationInSeconds} seconds...`
-                            );
-                            await Helper.sleep(
-                                item.poll.durationInSeconds * 1000
-                            );
+                            Logger.log(`wait for ${item.poll.durationInSeconds} seconds...`);
+                            await Helper.sleep(item.poll.durationInSeconds * 1000);
                         }
                     }
 
@@ -149,9 +125,7 @@ export class RunCommand extends TestCommandBase {
         authentication: request.RequestAuthentication,
         variables: Map<string, string>
     ): Promise<WebResponse> {
-        const url = new URL(
-            StringUtils.fillTokens(item.request.url, variables)
-        );
+        const url = new URL(StringUtils.fillTokens(item.request.url, variables));
         const headers = item.request.headers
             ? new Map(Object.entries(item.request.headers))
             : new Map<string, string | number>();
@@ -172,46 +146,18 @@ export class RunCommand extends TestCommandBase {
 
         if (item.request.method === "POST") {
             const payload = item.request.json
-                ? StringUtils.fillTokens(
-                      JSON.stringify(item.request.json),
-                      variables
-                  )
+                ? StringUtils.fillTokens(JSON.stringify(item.request.json), variables)
                 : undefined;
-            return HttpRequestHelper.makePOSTRequest(
-                item.name,
-                url,
-                payload,
-                headers,
-                qParams
-            );
+            return HttpRequestHelper.makePOSTRequest(item.name, url, payload, headers, qParams);
         } else if (item.request.method === "PUT") {
             const payload = item.request.json
-                ? StringUtils.fillTokens(
-                      JSON.stringify(item.request.json),
-                      variables
-                  )
+                ? StringUtils.fillTokens(JSON.stringify(item.request.json), variables)
                 : undefined;
-            return HttpRequestHelper.makePUTRequest(
-                item.name,
-                url,
-                payload,
-                headers,
-                qParams
-            );
+            return HttpRequestHelper.makePUTRequest(item.name, url, payload, headers, qParams);
         } else if (item.request.method === "DELETE") {
-            return HttpRequestHelper.makeDELETERequest(
-                item.name,
-                url,
-                headers,
-                qParams
-            );
+            return HttpRequestHelper.makeDELETERequest(item.name, url, headers, qParams);
         }
 
-        return HttpRequestHelper.makeGETRequest(
-            item.name,
-            url,
-            headers,
-            qParams
-        );
+        return HttpRequestHelper.makeGETRequest(item.name, url, headers, qParams);
     }
 }

@@ -33,9 +33,7 @@ export class VarCacheCommand extends CommandBase {
                     if (VariableCache.clear(clearCacheId)) {
                         Logger.log(`Cache with id, ${clearCacheId} is deleted`);
                     } else {
-                        Logger.log(
-                            `Cache with id, ${clearCacheId} was not found`
-                        );
+                        Logger.log(`Cache with id, ${clearCacheId} was not found`);
                     }
                 }
             } else {

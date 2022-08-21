@@ -28,9 +28,7 @@ export class MapValues extends ValidatorBase {
                 path: valuePath,
                 json: val,
             } as JSONPathOptions);
-            return (
-                mapVal.length === 1 && expectedVal === JSON.stringify(mapVal[0])
-            );
+            return mapVal.length === 1 && expectedVal === JSON.stringify(mapVal[0]);
         });
 
         if (allMatch !== all) {
