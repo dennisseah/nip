@@ -1,12 +1,12 @@
 import { Logger } from "./logger";
 import * as https from "https";
 import * as http from "http";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class WebResponse {
     public statusCode: number | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public body?: any;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
     public constructor(statusCode: number, body?: any) {
         this.statusCode = statusCode;
         this.body = body;

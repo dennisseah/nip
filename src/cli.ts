@@ -41,5 +41,5 @@ try {
     registerSubCommands(mainCmd);
     mainCmd.parse();
 } catch (ex) {
-    console.error((ex as Error).message);
+    console.error(`\x1b[31m${(ex as Error).message}\x1b[89m\x1b[0m`);
 }

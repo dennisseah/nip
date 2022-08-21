@@ -15,7 +15,7 @@
             },
             "validations": [
                 {
-                    "type": "validateExist",
+                    "type": "exist",
                     "parameters": {
                         "path": "$.jobId"
                     }
@@ -40,7 +40,7 @@
             },
             "validations": [
                 {
-                    "type": "validateExist",
+                    "type": "exist",
                     "parameters": {
                         "path": "$.processId"
                     }
@@ -70,45 +70,45 @@
             },
             "validations": [
                 {
-                    "type": "validateStringValue",
+                    "type": "stringValueEq",
                     "parameters": {
                         "path": "$.jobId",
                         "expectedVal": "{{fetch_jobId}}"
                     }
                 },
                 {
-                    "type": "validateStringValue",
+                    "type": "stringValueEq",
                     "parameters": {
                         "path": "$.processId",
                         "expectedVal": "{{fetch_processId}}"
                     }
                 },
                 {
-                    "type": "validateExist",
+                    "type": "exist",
                     "parameters": {
                         "path": "$.creationTime"
                     }
                 },
                 {
-                    "type": "validateExist",
+                    "type": "exist",
                     "parameters": {
                         "path": "$.description"
                     }
                 },
                 {
-                    "type": "validateExist",
+                    "type": "exist",
                     "parameters": {
                         "path": "$.processStartTime"
                     }
                 },
                 {
-                    "type": "validateExist",
+                    "type": "exist",
                     "parameters": {
                         "path": "$.processEndTime"
                     }
                 },
                 {
-                    "type": "validateBooleanValue",
+                    "type": "booleanValueEq",
                     "parameters": {
                         "path": "$.isComplete",
                         "expectedVal": true
@@ -147,7 +147,7 @@
             },
             "validations": [
                 {
-                    "type": "validateHTTPCode",
+                    "type": "httpStatusCodeEq",
                     "parameters": {
                         "expectedVal": 404
                     }

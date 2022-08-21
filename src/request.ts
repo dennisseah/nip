@@ -1,12 +1,11 @@
-import {
-    ValidateArraySizeParameters,
-    ValidateExistParameters,
-    ValidateHTTPCodeParameters,
-    ValidateMapValuesParameters,
-    ValidateNumericValueParameters,
-    ValidateBooleanValueParameters,
-    ValidateStringValueParameters,
-} from "./utils/validator";
+import { ArraySizeParameters } from "./utils/validators/arraySize";
+import { BooleanValueEqParameters } from "./utils/validators/booleanValueEq";
+import { ExistParameters } from "./utils/validators/exist";
+import { ExistNullParameters } from "./utils/validators/existNull";
+import { HTTPStatusCodeEqParameters } from "./utils/validators/httpStatusCodeEq";
+import { MapValuesParameters } from "./utils/validators/mapValues";
+import { NumericValueEqParameters } from "./utils/validators/numericValueEq";
+import { StringValueEqParameters } from "./utils/validators/stringValueEq";
 
 export type HttpTypes = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -31,21 +30,23 @@ export interface RequestItemPoll {
 
 export interface RequestItemValidation {
     type:
-        | "validateMapValues"
-        | "validateStringValue"
-        | "validateNumericValue"
-        | "validateBooleanValue"
-        | "validateHTTPCode"
-        | "validateArraySize"
-        | "validateExist";
+        | "mapValues"
+        | "stringValueEq"
+        | "NumericValueEq"
+        | "booleanValueEq"
+        | "httpStatusCodeEq"
+        | "arraySize"
+        | "exist"
+        | "existNull";
     parameters:
-        | ValidateMapValuesParameters
-        | ValidateStringValueParameters
-        | ValidateNumericValueParameters
-        | ValidateBooleanValueParameters
-        | ValidateHTTPCodeParameters
-        | ValidateArraySizeParameters
-        | ValidateExistParameters;
+        | MapValuesParameters
+        | StringValueEqParameters
+        | NumericValueEqParameters
+        | BooleanValueEqParameters
+        | HTTPStatusCodeEqParameters
+        | ArraySizeParameters
+        | ExistParameters
+        | ExistNullParameters;
 }
 
 export interface RequestItem {

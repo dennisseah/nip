@@ -9,7 +9,7 @@ steps:
       counterVariable: job_count
       total: 10
     validations:
-      - type: validateExist
+      - type: exist
         parameters:
           path: $.jobId
     variables:
@@ -24,26 +24,26 @@ steps:
       counterVariable: job_count
       total: 10
     validations:
-      - type: validateStringValue
+      - type: stringValueEq
         parameters:
           path: $.jobId
           expectedVal: '{{fetch_jobId}}'
-      - type: validateExist
+      - type: existNull
         parameters:
           path: $.creationTime
-      - type: validateExist
+      - type: exist
         parameters:
           path: $.description
-      - type: validateExist
+      - type: existNull
         parameters:
           path: $.processId
-      - type: validateExist
+      - type: existNull
         parameters:
           path: $.processStartTime
-      - type: validateExist
+      - type: existNull
         parameters:
           path: $.processEndTime
-      - type: validateBooleanValue
+      - type: booleanValueEq
         parameters:
           path: $.isComplete
           expectedVal: false
@@ -67,7 +67,7 @@ teardowns:
       counterVariable: job_count
       total: 10
     validations:
-      - type: validateHTTPCode
+      - type: httpStatusCodeEq
         parameters:
           expectedVal: 404
 authentication:

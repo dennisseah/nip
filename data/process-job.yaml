@@ -6,7 +6,7 @@ steps:
       json:
         description: job {{$randomColor}}-{{$randomInt}}
     validations:
-      - type: validateExist
+      - type: exist
         parameters:
           path: $.jobId
     variables:
@@ -16,7 +16,7 @@ steps:
       url: '{{host}}/jobs/{{jobId}}/process'
       method: POST
     validations:
-      - type: validateExist
+      - type: exist
         parameters:
           path: $.processId
     variables:
@@ -29,27 +29,27 @@ steps:
       type: bool_true
       path: $.isComplete
     validations:
-      - type: validateStringValue
+      - type: stringValueEq
         parameters:
           path: $.jobId
           expectedVal: '{{jobId}}'
-      - type: validateStringValue
+      - type: stringValueEq
         parameters:
           path: $.processId
           expectedVal: '{{processId}}'
-      - type: validateExist
+      - type: exist
         parameters:
           path: $.creationTime
-      - type: validateExist
+      - type: exist
         parameters:
           path: $.description
-      - type: validateExist
+      - type: exist
         parameters:
           path: $.processStartTime
-      - type: validateExist
+      - type: exist
         parameters:
           path: $.processEndTime
-      - type: validateBooleanValue
+      - type: booleanValueEq
         parameters:
           path: $.isComplete
           expectedVal: true
@@ -63,7 +63,7 @@ teardowns:
       url: '{{host}}/jobs/{{jobId}}'
       method: GET
     validations:
-      - type: validateHTTPCode
+      - type: httpStatusCodeEq
         parameters:
           expectedVal: 404
 authentication:
