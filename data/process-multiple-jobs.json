@@ -78,7 +78,8 @@
             },
             "poll": {
                 "type": "bool_true",
-                "path": "$.isComplete"
+                "path": "$.isComplete",
+                "durationInSeconds": 60
             },
             "validations": [
                 {

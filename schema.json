@@ -99,9 +99,12 @@
                 },
                 "path": {
                     "type": "string"
+                },
+                "durationInSeconds": {
+                    "type": "number"
                 }
             },
-            "required": ["type"]
+            "required": ["type", "durationInSeconds"]
         },
         "step-validation": {
             "type": "object",

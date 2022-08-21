@@ -48,6 +48,7 @@ steps:
     poll:
       type: bool_true
       path: $.isComplete
+      durationInSeconds: 60
     validations:
       - type: httpStatusCodeEq
         parameters:

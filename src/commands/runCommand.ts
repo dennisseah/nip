@@ -124,8 +124,12 @@ export class RunCommand extends TestCommandBase {
                                 data.variables
                             );
                         } else {
-                            Logger.log("wait for one minute...");
-                            await Helper.sleep(1000 * 60); // one minute
+                            Logger.log(
+                                `wait for ${item.poll.durationInSeconds} seconds...`
+                            );
+                            await Helper.sleep(
+                                item.poll.durationInSeconds * 1000
+                            );
                         }
                     }
 

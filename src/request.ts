@@ -26,6 +26,7 @@ export interface RequestItemRepeat {
 export interface RequestItemPoll {
     type: "bool_true" | "bool_false" | "empty_list";
     path?: string;
+    durationInSeconds: number;
 }
 
 export interface RequestItemValidation {
