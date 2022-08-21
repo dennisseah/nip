@@ -13,14 +13,19 @@ export class VarCacheCommand extends CommandBase {
         return super
             .addOptions(cmd)
             .option("-s --show <id>", "show cache for a given identifier.")
-            .option("-c --clear <id>", "clear cache for a given identifier.");
+            .option("-c --clear <id>", "clear cache for a given identifier.")
+            .option("-a --clearall", "clear all caches.");
     }
     protected doAction(): Promise<void> {
         return new Promise((resolve) => {
-            const cacheId = this.subCmd!.opts().show;
-            const clearCacheId = this.subCmd!.opts().clear;
+            const subCmd = this.subCmd!;
+            const clearAll = subCmd.opts().clearall;
+            const cacheId = subCmd.opts().show;
+            const clearCacheId = subCmd!.opts().clear;
 
-            if (cacheId || clearCacheId) {
+            if (clearAll) {
+                VariableCache.clearAll();
+            } else if (cacheId || clearCacheId) {
                 if (cacheId) {
                     this.show(cacheId);
                 }

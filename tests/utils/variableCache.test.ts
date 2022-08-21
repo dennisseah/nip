@@ -204,3 +204,23 @@ describe("VariableCache store unit test", () => {
         sandbox.assert.calledOnce(spyWriteFileSync);
     });
 });
+
+describe("VariableCache clearAll unit test", () => {
+    const sandbox: SinonSandbox = sinon.createSandbox();
+    let spyRmdirSync: SinonStub;
+
+    before(() => {
+        spyRmdirSync = sandbox
+            .stub(fs, "rmdirSync")
+            .withArgs(sinon.match.string, sinon.match.any);
+    });
+
+    after(() => {
+        sandbox.restore();
+    });
+
+    it("clear caches", () => {
+        VariableCache.clearAll();
+        sandbox.assert.calledOnce(spyRmdirSync);
+    });
+});

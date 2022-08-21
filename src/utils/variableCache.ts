@@ -38,6 +38,9 @@ export class VariableCache {
         }
         return false;
     }
+    static clearAll(): void {
+        fs.rmdirSync(this.getCacheDirectory(), { recursive: true });
+    }
     static store(id: string | undefined, data: Map<string, string>): void {
         if (id) {
             this.createCacheDirectory();
