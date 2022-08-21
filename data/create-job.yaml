@@ -6,6 +6,9 @@ steps:
       json:
         description: job {{$randomColor}}-{{$randomInt}}
     validations:
+      - type: httpStatusCodeEq
+        parameters:
+          expectedVal: 202
       - type: exist
         parameters:
           path: $.jobId
@@ -16,11 +19,14 @@ steps:
       url: '{{host}}/jobs/{{jobId}}'
       method: GET
     validations:
+      - type: httpStatusCodeEq
+        parameters:
+          expectedVal: 200
       - type: stringValueEq
         parameters:
           path: $.jobId
           expectedVal: '{{jobId}}'
-      - type: existNull
+      - type: exist
         parameters:
           path: $.creationTime
       - type: exist
@@ -44,6 +50,10 @@ teardowns:
     request:
       url: '{{host}}/jobs/{{jobId}}'
       method: DELETE
+    validations:
+      - type: httpStatusCodeEq
+        parameters:
+          expectedVal: 204
   - name: 'Teardown: Confirm job deletion'
     request:
       url: '{{host}}/jobs/{{jobId}}'

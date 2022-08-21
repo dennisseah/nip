@@ -17,10 +17,10 @@ steps:
           path: $.jobId
     variables:
       jobId_{{job_count}}: $.jobId
-  - name: 'Asset: Get New Jobs'
+  - name: 'Act: Start process for jobs'
     request:
-      url: '{{host}}/jobs/{{fetch_jobId}}'
-      method: GET
+      url: '{{host}}/jobs/{{fetch_jobId}}/process'
+      method: POST
     preRequestVariables:
       fetch_jobId: '{{jobId_{{job_count}}}}'
     repeat:
@@ -29,30 +29,53 @@ steps:
     validations:
       - type: httpStatusCodeEq
         parameters:
+          expectedVal: 202
+      - type: exist
+        parameters:
+          path: $.processId
+    variables:
+      processId_{{job_count}}: $.processId
+  - name: 'Asset: Get New Jobs'
+    request:
+      url: '{{host}}/jobs/{{fetch_jobId}}'
+      method: GET
+    preRequestVariables:
+      fetch_jobId: '{{jobId_{{job_count}}}}'
+      fetch_processId: '{{processId_{{job_count}}}}'
+    repeat:
+      counterVariable: job_count
+      total: 10
+    poll:
+      type: bool_true
+      path: $.isComplete
+    validations:
+      - type: httpStatusCodeEq
+        parameters:
           expectedVal: 200
       - type: stringValueEq
         parameters:
           path: $.jobId
           expectedVal: '{{fetch_jobId}}'
+      - type: stringValueEq
+        parameters:
+          path: $.processId
+          expectedVal: '{{fetch_processId}}'
       - type: exist
         parameters:
           path: $.creationTime
       - type: exist
         parameters:
           path: $.description
-      - type: existNull
-        parameters:
-          path: $.processId
-      - type: existNull
+      - type: exist
         parameters:
           path: $.processStartTime
-      - type: existNull
+      - type: exist
         parameters:
           path: $.processEndTime
       - type: booleanValueEq
         parameters:
           path: $.isComplete
-          expectedVal: false
+          expectedVal: true
 teardowns:
   - name: 'Teardown: Delete jobs'
     request:
@@ -86,4 +109,4 @@ authentication:
 variables:
   host: https://localhost:7035
   job_count: '0'
-id: c2c4a291-a29e-4081-b0ac-ea9cbf638055
+id: 6a1d8427-610e-4373-90bb-d4e2fb04455d

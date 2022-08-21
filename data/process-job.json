@@ -11,6 +11,12 @@
             },
             "validations": [
                 {
+                    "type": "httpStatusCodeEq",
+                    "parameters": {
+                        "expectedVal": 202
+                    }
+                },
+                {
                     "type": "exist",
                     "parameters": {
                         "path": "$.jobId"
@@ -28,6 +34,12 @@
                 "method": "POST"
             },
             "validations": [
+                {
+                    "type": "httpStatusCodeEq",
+                    "parameters": {
+                        "expectedVal": 202
+                    }
+                },
                 {
                     "type": "exist",
                     "parameters": {
@@ -50,6 +62,12 @@
                 "path": "$.isComplete"
             },
             "validations": [
+                {
+                    "type": "httpStatusCodeEq",
+                    "parameters": {
+                        "expectedVal": 200
+                    }
+                },
                 {
                     "type": "stringValueEq",
                     "parameters": {
@@ -104,7 +122,15 @@
             "request": {
                 "url": "{{host}}/jobs/{{jobId}}",
                 "method": "DELETE"
-            }
+            },
+            "validations": [
+                {
+                    "type": "httpStatusCodeEq",
+                    "parameters": {
+                        "expectedVal": 204
+                    }
+                }
+            ]
         },
         {
             "name": "Teardown: Confirm job deletion",
