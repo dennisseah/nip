@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Command } from "commander";
+
 import { Helper } from "../utils/helper";
 import { HttpRequestHelper } from "../utils/httpRequestHelper";
 import { Logger } from "../utils/logger";
 import { RequestFile } from "../utils/requestFile";
 import { StringUtils } from "../utils/stringUtils";
-
-import * as request from "../request";
-import * as path from "path";
-import { Promise } from "bluebird";
 import { TestCommandBase } from "./testCommandBase";
 import { WebResponse } from "../utils/requestUtils";
+
+import { Command } from "commander";
+import { Promise } from "bluebird";
+import * as path from "path";
+import * as request from "../request";
 
 export class RunCommand extends TestCommandBase {
     protected addOptions(cmd: Command): Command {

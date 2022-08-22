@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import { Command } from "commander";
 import { CommandBase } from "./commandBase";
-import { VariableCache } from "../utils/variableCache";
 import { Logger } from "../utils/logger";
+import { VariableCache } from "../utils/variableCache";
 
 export class VarCacheCommand extends CommandBase {
     protected addOptions(cmd: Command): Command {

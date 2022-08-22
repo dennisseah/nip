@@ -1,19 +1,17 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommandBase } from "./commandBase";
+import { Poller } from "../utils/poller";
+import { StringUtils } from "../utils/stringUtils";
 import { Validator } from "../utils/validator";
 import { VariableCache } from "../utils/variableCache";
+import { WebResponse } from "../utils/requestUtils";
 import * as request from "../request";
 
 import { env } from "process";
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
-import { Poller } from "../utils/poller";
-import { WebResponse } from "../utils/requestUtils";
-import { StringUtils } from "../utils/stringUtils";
-
 export abstract class TestCommandBase extends CommandBase {
     protected extractVariables(
         variables: Map<string, string>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
         result: any,
         variablesCfg: Map<string, string>
     ): void {
@@ -63,6 +61,7 @@ export abstract class TestCommandBase extends CommandBase {
             );
         }
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
     protected polling(result: any, poll: request.RequestItemPoll): boolean {
         return poll ? Poller.poll(result, poll.type, poll.path) : true;
     }
@@ -83,7 +82,11 @@ export abstract class TestCommandBase extends CommandBase {
         return true;
     }
 
-    protected loadVariables(id: string, dataVariable: Map<string, string>, restart: boolean) {
+    protected loadVariables(
+        id: string,
+        dataVariable: Map<string, string>,
+        restart: boolean
+    ): Map<string, string> {
         const variables = new Map(Object.entries(dataVariable));
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         Object.keys(env).forEach((k) => variables.set(k, env[k]!.toString()));

@@ -1,8 +1,8 @@
 import { Command } from "commander";
+import { CommandBase } from "./commandBase";
 import { Logger } from "../utils/logger";
 import * as fs from "fs";
 import * as path from "path";
-import { CommandBase } from "./commandBase";
 
 export class ListCommand extends CommandBase {
     protected addOptions(cmd: Command): Command {
