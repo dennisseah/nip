@@ -6,12 +6,10 @@ import { HttpRequestHelper } from "../utils/httpRequestHelper";
 import { Logger } from "../utils/logger";
 import { RequestFile } from "../utils/requestFile";
 import { StringUtils } from "../utils/stringUtils";
-import { VariableCache } from "../utils/variableCache";
 
 import * as request from "../request";
 import * as path from "path";
 import { Promise } from "bluebird";
-import { env } from "process";
 import { TestCommandBase } from "./testCommandBase";
 import { WebResponse } from "../utils/requestUtils";
 
@@ -36,18 +34,7 @@ export class RunCommand extends TestCommandBase {
         const restart = subCmd.opts().restart;
 
         const data = RequestFile.fetch(path.join(dataDir, filename));
-
-        data.variables = new Map(Object.entries(data.variables));
-        Object.keys(env).forEach((k) => data.variables.set(k, env[k]!.toString()));
-
-        if (!restart) {
-            const cachedVariables = VariableCache.fetch(data.id);
-            [...cachedVariables.keys()].forEach((k) =>
-                data.variables.set(k, cachedVariables.get(k)!)
-            );
-        } else {
-            VariableCache.clear(data.id);
-        }
+        data.variables = this.loadVariables(data.id!, data.variables, restart);
 
         if (data.authentication && data.authentication.apiKeys) {
             data.authentication.apiKeys = new Map(Object.entries(data.authentication.apiKeys));
@@ -82,7 +69,9 @@ export class RunCommand extends TestCommandBase {
                     let completed = false;
 
                     while (!completed) {
-                        completed = await this.performStep(item, data);
+                        this.populateVariables(item.preRequestVariables, data.variables);
+                        await this.performStep(item, data);
+                        completed = this.repeat(item.repeat, data.variables);
                     }
 
                     resolve("completed");
@@ -96,26 +85,27 @@ export class RunCommand extends TestCommandBase {
             })();
         });
     }
-    private async performStep(item: request.RequestItem, data: request.Request): Promise<boolean> {
-        this.populateVariables(item.preRequestVariables, data.variables);
-        const response = await this.makeRequest(item, data.authentication, data.variables);
-        const responseBody = response.body;
-        Logger.debug(JSON.stringify(responseBody, null, 2));
-        let completed: boolean = this.polling(responseBody, item.poll);
+    private async performStep(item: request.RequestItem, data: request.Request): Promise<void> {
+        let completed = false;
 
-        if (completed) {
-            // completed polling
-            if (responseBody) {
-                Logger.log(JSON.stringify(responseBody, null, 2));
+        while (!completed) {
+            const response = await this.makeRequest(item, data.authentication, data.variables);
+            const responseBody = response.body;
+            Logger.debug(JSON.stringify(responseBody, null, 2));
+            completed = this.polling(responseBody, item.poll);
+
+            if (completed) {
+                // completed polling
+                if (responseBody) {
+                    Logger.log(JSON.stringify(responseBody, null, 2));
+                }
+                this.validate(response, item.validations, data.variables);
+                this.extractVariables(data.variables, responseBody, item.variables);
+            } else {
+                Logger.log(`wait for ${item.poll.durationInSeconds} seconds...`);
+                await Helper.sleep(item.poll.durationInSeconds * 1000);
             }
-            this.validate(response, item.validations, data.variables);
-            this.extractVariables(data.variables, responseBody, item.variables);
-            completed = this.repeat(item.repeat, data.variables);
-        } else {
-            Logger.log(`wait for ${item.poll.durationInSeconds} seconds...`);
-            await Helper.sleep(item.poll.durationInSeconds * 1000);
         }
-        return completed;
     }
     private makeRequest(
         item: request.RequestItem,

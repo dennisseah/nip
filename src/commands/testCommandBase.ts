@@ -82,4 +82,22 @@ export abstract class TestCommandBase extends CommandBase {
         }
         return true;
     }
+
+    protected loadVariables(id: string, dataVariable: Map<string, string>, restart: boolean) {
+        const variables = new Map(Object.entries(dataVariable));
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        Object.keys(env).forEach((k) => variables.set(k, env[k]!.toString()));
+
+        if (!restart) {
+            const cachedVariables = VariableCache.fetch(id);
+            [...cachedVariables.keys()].forEach((k) =>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                variables.set(k, cachedVariables.get(k)!)
+            );
+        } else {
+            VariableCache.clear(id);
+        }
+
+        return variables;
+    }
 }

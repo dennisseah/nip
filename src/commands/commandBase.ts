@@ -33,7 +33,7 @@ export abstract class CommandBase implements CommandHandler {
         return cmd;
     }
 
-    protected async execute(): Promise<void> {
+    private async execute(): Promise<void> {
         const start = new Date().getTime();
         const cmdOpts = this.subCmd !== undefined ? this.subCmd.opts() : undefined;
 
