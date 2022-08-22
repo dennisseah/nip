@@ -16,9 +16,6 @@ import { TestCommandBase } from "./testCommandBase";
 import { WebResponse } from "../utils/requestUtils";
 
 export class RunCommand extends TestCommandBase {
-    protected getCommandName(): string {
-        return "run";
-    }
     protected addOptions(cmd: Command): Command {
         return super
             .addOptions(cmd)
@@ -31,7 +28,7 @@ export class RunCommand extends TestCommandBase {
             )
             .option("-t --teardown", "run tear down steps.", false);
     }
-    protected doAction(): Promise<void> {
+    protected async perform(): Promise<void> {
         const subCmd = this.subCmd!;
         const dataDir = subCmd.opts().datadir || path.join(".", "data");
         const filename = subCmd.opts().filename;
@@ -85,28 +82,7 @@ export class RunCommand extends TestCommandBase {
                     let completed = false;
 
                     while (!completed) {
-                        this.populateVariables(item.preRequestVariables, data.variables);
-                        const response = await this.makeRequest(
-                            item,
-                            data.authentication,
-                            data.variables
-                        );
-                        const responseBody = response.body;
-                        Logger.debug(JSON.stringify(responseBody, null, 2));
-                        completed = this.polling(responseBody, item.poll);
-
-                        if (completed) {
-                            // completed polling
-                            if (responseBody) {
-                                Logger.log(JSON.stringify(responseBody, null, 2));
-                            }
-                            this.validate(response, item.validations, data.variables);
-                            this.extractVariables(data.variables, responseBody, item.variables);
-                            completed = this.repeat(item.repeat, data.variables);
-                        } else {
-                            Logger.log(`wait for ${item.poll.durationInSeconds} seconds...`);
-                            await Helper.sleep(item.poll.durationInSeconds * 1000);
-                        }
+                        completed = await this.performStep(item, data);
                     }
 
                     resolve("completed");
@@ -119,6 +95,27 @@ export class RunCommand extends TestCommandBase {
                 }
             })();
         });
+    }
+    private async performStep(item: request.RequestItem, data: request.Request): Promise<boolean> {
+        this.populateVariables(item.preRequestVariables, data.variables);
+        const response = await this.makeRequest(item, data.authentication, data.variables);
+        const responseBody = response.body;
+        Logger.debug(JSON.stringify(responseBody, null, 2));
+        let completed: boolean = this.polling(responseBody, item.poll);
+
+        if (completed) {
+            // completed polling
+            if (responseBody) {
+                Logger.log(JSON.stringify(responseBody, null, 2));
+            }
+            this.validate(response, item.validations, data.variables);
+            this.extractVariables(data.variables, responseBody, item.variables);
+            completed = this.repeat(item.repeat, data.variables);
+        } else {
+            Logger.log(`wait for ${item.poll.durationInSeconds} seconds...`);
+            await Helper.sleep(item.poll.durationInSeconds * 1000);
+        }
+        return completed;
     }
     private makeRequest(
         item: request.RequestItem,
@@ -149,12 +146,14 @@ export class RunCommand extends TestCommandBase {
                 ? StringUtils.fillTokens(JSON.stringify(item.request.json), variables)
                 : undefined;
             return HttpRequestHelper.makePOSTRequest(item.name, url, payload, headers, qParams);
-        } else if (item.request.method === "PUT") {
+        }
+        if (item.request.method === "PUT") {
             const payload = item.request.json
                 ? StringUtils.fillTokens(JSON.stringify(item.request.json), variables)
                 : undefined;
             return HttpRequestHelper.makePUTRequest(item.name, url, payload, headers, qParams);
-        } else if (item.request.method === "DELETE") {
+        }
+        if (item.request.method === "DELETE") {
             return HttpRequestHelper.makeDELETERequest(item.name, url, headers, qParams);
         }
 

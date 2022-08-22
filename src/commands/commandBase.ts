@@ -1,4 +1,4 @@
-import { Command, OptionValues } from "commander";
+import { Command } from "commander";
 import { CommandHandler } from "./commandHandler";
 import { Logger } from "../utils/logger";
 
@@ -9,17 +9,16 @@ export abstract class CommandBase implements CommandHandler {
     protected subCmd: Command | undefined;
     private name = "";
 
-    protected abstract doAction(): Promise<void>;
-    protected abstract getCommandName(): string;
+    protected abstract perform(): Promise<void>;
 
-    public register(cmd: Command): void {
-        this.registerCmd(cmd, this.getCommandName());
+    public register(name: string, cmd: Command): void {
+        this.registerCmd(cmd, name);
     }
 
     protected registerCmd(parent: Command, name: string): Command {
         this.name = name;
         this.subCmd = parent.command(name).action(async (): Promise<void> => {
-            await this.action();
+            await this.execute();
         });
         this.subCmd.option(
             "-l --loglevel <logLevel>",
@@ -34,19 +33,16 @@ export abstract class CommandBase implements CommandHandler {
         return cmd;
     }
 
-    protected async action(): Promise<void> {
+    protected async execute(): Promise<void> {
         const start = new Date().getTime();
-        let cmdOpts: OptionValues | undefined;
-        if (this.subCmd !== undefined) {
-            cmdOpts = this.subCmd.opts();
-        }
+        const cmdOpts = this.subCmd !== undefined ? this.subCmd.opts() : undefined;
 
         try {
-            if (cmdOpts !== undefined) {
+            if (cmdOpts !== undefined && cmdOpts.loglevel !== undefined) {
                 Logger.setLevel(Logger.parseLevel(cmdOpts.loglevel as string));
             }
             Logger.debug(`executing ${this.name} command.`);
-            await this.doAction();
+            await this.perform();
         } catch (ex) {
             Logger.error((ex as Error).message);
         } finally {

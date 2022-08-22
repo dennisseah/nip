@@ -5,13 +5,10 @@ import * as path from "path";
 import { CommandBase } from "./commandBase";
 
 export class ListCommand extends CommandBase {
-    protected getCommandName(): string {
-        return "list";
-    }
     protected addOptions(cmd: Command): Command {
         return super.addOptions(cmd).option("-d --datadir <datadir>", "data folder name.");
     }
-    protected doAction(): Promise<void> {
+    protected async perform(): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const dataDir = this.subCmd!.opts().datadir || path.join(".", "data");
 

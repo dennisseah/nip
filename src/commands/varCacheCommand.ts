@@ -6,9 +6,6 @@ import { VariableCache } from "../utils/variableCache";
 import { Logger } from "../utils/logger";
 
 export class VarCacheCommand extends CommandBase {
-    protected getCommandName(): string {
-        return "var-cache";
-    }
     protected addOptions(cmd: Command): Command {
         return super
             .addOptions(cmd)
@@ -16,7 +13,7 @@ export class VarCacheCommand extends CommandBase {
             .option("-c --clear <id>", "clear cache for a given identifier.")
             .option("-a --clearall", "clear all caches.");
     }
-    protected doAction(): Promise<void> {
+    protected async perform(): Promise<void> {
         return new Promise((resolve) => {
             const subCmd = this.subCmd!;
             const clearAll = subCmd.opts().clearall;
