@@ -21,13 +21,16 @@ defining
 
 run `yarn run package` and then `nip` executable with be created. (for MacOS)
 
-|    command | description                                                 |
-| ---------: | ----------------------------------------------------------- |
-| `nip list` | to list all the data file.                                   |
-|  `nip run` | to execute data file. `nip run --help` for more information. |
+|         command | description                                                  |
+| --------------: | ------------------------------------------------------------ |
+|      `nip list` | to list all the data file.                                   |
+|       `nip run` | to execute data file. `nip run --help` for more information. |
+| `nip var-cache` | for variable caching related actions                         |
 
 The schema for the data file is a [schema.json](./schema.json)
 ### Development
+
+example
 
 `ts-node src/cli.ts run -f sample.json`
 
