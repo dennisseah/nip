@@ -49,14 +49,14 @@ describe("RequestUtils createOptions unit test", () => {
     });
 });
 
-const createMockOptions = (url: URL, method: string, payload?: string): RequestOptions => {
-    const headers = new Map();
-    const parameters = new Map();
-
-    return RequestUtils.createOptions(url, method, headers, parameters, payload);
-};
-
 describe("RequestUtils sendRequest unit test", () => {
+    const createMockOptions = (url: URL, method: string, payload?: string): RequestOptions => {
+        const headers = new Map();
+        const parameters = new Map();
+
+        return RequestUtils.createOptions(url, method, headers, parameters, payload);
+    };
+
     it("error case", async () => {
         const url = new URL("https://sample.com:8080/test");
         nock("https://sample.com:8080").get("/test").query({}).reply(400);

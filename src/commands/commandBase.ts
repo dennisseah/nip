@@ -6,7 +6,7 @@ import { Logger } from "../utils/logger";
  * Base class for command classes.
  */
 export abstract class CommandBase implements CommandHandler {
-    protected subCmd: Command | undefined;
+    private subCmd: Command | undefined;
     private name = "";
 
     protected abstract perform(): Promise<void>;
@@ -31,6 +31,17 @@ export abstract class CommandBase implements CommandHandler {
 
     protected addOptions(cmd: Command): Command {
         return cmd;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    protected getOptionString(key: string, defaultValue?: string): string {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return this.subCmd!.opts()[key] || defaultValue;
+    }
+
+    protected getOptionBoolean(key: string): boolean {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return this.subCmd!.opts()[key];
     }
 
     private async execute(): Promise<void> {

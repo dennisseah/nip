@@ -14,30 +14,26 @@ export class VarCacheCommand extends CommandBase {
             .option("-a --clearall", "clear all caches.");
     }
     protected async perform(): Promise<void> {
-        return new Promise((resolve) => {
-            const subCmd = this.subCmd!;
-            const clearAll = subCmd.opts().clearall;
-            const cacheId = subCmd.opts().show;
-            const clearCacheId = subCmd!.opts().clear;
+        const clearAll = this.getOptionBoolean("clearall");
+        const cacheId = this.getOptionString("show");
+        const clearCacheId = this.getOptionString("clear");
 
-            if (clearAll) {
-                VariableCache.clearAll();
-            } else if (cacheId || clearCacheId) {
-                if (cacheId) {
-                    this.show(cacheId);
-                }
-                if (clearCacheId) {
-                    if (VariableCache.clear(clearCacheId)) {
-                        Logger.log(`Cache with id, ${clearCacheId} is deleted`);
-                    } else {
-                        Logger.log(`Cache with id, ${clearCacheId} was not found`);
-                    }
-                }
-            } else {
-                this.list();
+        if (clearAll) {
+            VariableCache.clearAll();
+        } else if (cacheId || clearCacheId) {
+            if (cacheId) {
+                this.show(cacheId);
             }
-            resolve();
-        });
+            if (clearCacheId) {
+                if (VariableCache.clear(clearCacheId)) {
+                    Logger.log(`Cache with id, ${clearCacheId} is deleted`);
+                } else {
+                    Logger.log(`Cache with id, ${clearCacheId} was not found`);
+                }
+            }
+        } else {
+            this.list();
+        }
     }
     private list() {
         const files = VariableCache.list();

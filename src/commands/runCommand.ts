@@ -27,11 +27,10 @@ export class RunCommand extends TestCommandBase {
             .option("-t --teardown", "run tear down steps.", false);
     }
     protected async perform(): Promise<void> {
-        const subCmd = this.subCmd!;
-        const dataDir = subCmd.opts().datadir || path.join(".", "data");
-        const filename = subCmd.opts().filename;
-        const teardown = subCmd.opts().teardown;
-        const restart = subCmd.opts().restart;
+        const dataDir = this.getOptionString("datadir", path.join(".", "data"));
+        const filename = this.getOptionString("filename");
+        const teardown = this.getOptionBoolean("teardown");
+        const restart = this.getOptionBoolean("restart");
 
         const data = RequestFile.fetch(path.join(dataDir, filename));
         data.variables = this.loadVariables(data.id!, data.variables, restart);
@@ -43,7 +42,7 @@ export class RunCommand extends TestCommandBase {
         const steps = teardown ? data.teardowns : data.steps;
 
         if (steps) {
-            return Promise.mapSeries(steps, (item: request.RequestItem) =>
+            Promise.mapSeries(steps, (item: request.RequestItem) =>
                 this.createStep(item, data, teardown)
             )
                 .then(() => {
@@ -55,35 +54,30 @@ export class RunCommand extends TestCommandBase {
                     this.dumpVariables(data.id!, data.variables);
                 });
         }
-        return new Promise((resolve) => resolve());
     }
     private async createStep(
         item: request.RequestItem,
         data: request.Request,
         ignoreError: boolean
     ): Promise<string> {
-        return new Promise((resolve, reject) => {
-            (async () => {
-                try {
-                    Logger.log(`run step: ${item.name}`);
-                    let completed = false;
+        try {
+            Logger.log(`run step: ${item.name}`);
+            let completed = false;
 
-                    while (!completed) {
-                        this.populateVariables(item.preRequestVariables, data.variables);
-                        await this.performStep(item, data);
-                        completed = this.repeat(item.repeat, data.variables);
-                    }
+            while (!completed) {
+                this.populateVariables(item.preRequestVariables, data.variables);
+                await this.performStep(item, data);
+                completed = this.repeat(item.repeat, data.variables);
+            }
 
-                    resolve("completed");
-                } catch (ex) {
-                    if (ignoreError) {
-                        resolve((ex as Error).message);
-                    } else {
-                        reject(ex);
-                    }
-                }
-            })();
-        });
+            return "completed";
+        } catch (ex) {
+            if (ignoreError) {
+                return (ex as Error).message;
+            } else {
+                throw ex;
+            }
+        }
     }
     private async performStep(item: request.RequestItem, data: request.Request): Promise<void> {
         let completed = false;
