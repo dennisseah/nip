@@ -1,14 +1,14 @@
 import { WebResponse } from "../requestUtils";
 import { ValidatorBase } from "./validatorBase";
 
-export interface HTTPStatusCodeEqParameters {
+export interface HttpStatusCodeEqParameters {
     expectedVal: number;
 }
 
-export class HTTPStatusCodeEq extends ValidatorBase {
+export class HttpStatusCodeEq extends ValidatorBase {
     validate(
         response: WebResponse,
-        parameters: HTTPStatusCodeEqParameters,
+        parameters: HttpStatusCodeEqParameters,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         variables: Map<string, string>
     ): void {

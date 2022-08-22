@@ -2,7 +2,7 @@ import { ArraySizeParameters } from "./utils/validators/arraySize";
 import { BooleanValueEqParameters } from "./utils/validators/booleanValueEq";
 import { ExistParameters } from "./utils/validators/exist";
 import { ExistNullParameters } from "./utils/validators/existNull";
-import { HTTPStatusCodeEqParameters } from "./utils/validators/httpStatusCodeEq";
+import { HttpStatusCodeEqParameters } from "./utils/validators/httpStatusCodeEq";
 import { MapValuesParameters } from "./utils/validators/mapValues";
 import { NumericValueEqParameters } from "./utils/validators/numericValueEq";
 import { StringValueEqParameters } from "./utils/validators/stringValueEq";
@@ -44,7 +44,7 @@ export interface RequestItemValidation {
         | StringValueEqParameters
         | NumericValueEqParameters
         | BooleanValueEqParameters
-        | HTTPStatusCodeEqParameters
+        | HttpStatusCodeEqParameters
         | ArraySizeParameters
         | ExistParameters
         | ExistNullParameters;
