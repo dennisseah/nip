@@ -10,13 +10,4 @@ describe("RandomGenerator unit test", () => {
         const randColor = RandomGenerator.generate("randomColor") || "";
         expect(randColor in RandomGenerator.colors);
     });
-    it("randomInt test", () => {
-        const result = RandomGenerator.randomInt(1, 100);
-        expect(result).greaterThan(0);
-        expect(result).lessThan(101);
-    });
-    it("randomColor test", () => {
-        const result = RandomGenerator.randomColor();
-        expect(result in RandomGenerator.colors);
-    });
 });
