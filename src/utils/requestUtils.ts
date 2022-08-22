@@ -20,7 +20,7 @@ export class RequestUtils {
     ): Promise<WebResponse> {
         return new Promise<WebResponse>((resolve, reject) => {
             const req = https.request(options, (res) => {
-                const statusCode: number = this.handleResponse(res) || 400;
+                const statusCode: number = this.handleResponse(res);
 
                 if (statusCode > 299) {
                     resolve(new WebResponse(statusCode));
@@ -76,11 +76,11 @@ export class RequestUtils {
 
         return options;
     }
-    private static handleResponse(res: http.IncomingMessage): number | undefined {
+    private static handleResponse(res: http.IncomingMessage): number {
         Logger.debug(`STATUS: ${res.statusCode}`);
         Logger.debug(`HEADERS: ${JSON.stringify(res.headers)}`);
         res.setEncoding("utf8");
-        return res.statusCode;
+        return res.statusCode || 400;
     }
     private static isJSONBody(res: http.IncomingMessage): boolean {
         const contentTypes = (res.headers["content-type"] || "")
