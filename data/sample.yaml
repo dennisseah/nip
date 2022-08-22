@@ -5,6 +5,9 @@ steps:
       url: '{{host}}/V4/Northwind/Northwind.svc/Products'
       method: GET
     validations:
+      - type: httpStatusCodeEq
+        parameters:
+          expectedVal: 200
       - type: arraySize
         parameters:
           path: $.[value]
@@ -18,6 +21,9 @@ steps:
       parameters:
         $skiptoken: 20
     validations:
+      - type: httpStatusCodeEq
+        parameters:
+          expectedVal: 200
       - type: numericValueEq
         parameters:
           path: $.[value][0][ProductID]
@@ -27,6 +33,9 @@ steps:
       url: '{{host}}/V4/Northwind/Northwind.svc/Products({{first_product}})'
       method: GET
     validations:
+      - type: httpStatusCodeEq
+        parameters:
+          expectedVal: 200
       - type: stringValueEq
         parameters:
           path: $.[ProductName]

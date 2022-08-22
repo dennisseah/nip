@@ -9,6 +9,12 @@
             },
             "validations": [
                 {
+                    "type": "httpStatusCodeEq",
+                    "parameters": {
+                        "expectedVal": 200
+                    }
+                },
+                {
                     "type": "arraySize",
                     "parameters": {
                         "path": "$.[value]",
@@ -31,6 +37,12 @@
             },
             "validations": [
                 {
+                    "type": "httpStatusCodeEq",
+                    "parameters": {
+                        "expectedVal": 200
+                    }
+                },
+                {
                     "type": "numericValueEq",
                     "parameters": {
                         "path": "$.[value][0][ProductID]",
@@ -46,6 +58,12 @@
                 "method": "GET"
             },
             "validations": [
+                {
+                    "type": "httpStatusCodeEq",
+                    "parameters": {
+                        "expectedVal": 200
+                    }
+                },
                 {
                     "type": "stringValueEq",
                     "parameters": {
