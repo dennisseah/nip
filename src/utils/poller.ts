@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 
 export class Poller {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
     public static poll(result: any, type: string, path?: string): boolean {
         if (type === "bool_true") {
             const val = this.getElement(result, path);
@@ -18,6 +17,7 @@ export class Poller {
         throw new Error(`Unknown poll type, ${type}`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static getElement(result: any, path?: string): any {
         if (path) {
             return JSONPath({ path: path, json: result } as JSONPathOptions);

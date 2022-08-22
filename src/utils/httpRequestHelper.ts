@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestUtils, WebResponse } from "./requestUtils";
 
 export class HttpRequestHelper {

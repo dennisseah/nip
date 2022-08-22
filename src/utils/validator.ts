@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { WebResponse } from "./requestUtils";
 
 export class Validator {
     public static validate(
         obj: WebResponse,
         type: string,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
         parameters: any,
         variables: Map<string, string> = new Map()
-    ) {
+    ): void {
         let validator;
 
         try {

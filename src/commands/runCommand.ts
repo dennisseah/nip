@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Helper } from "../utils/helper";
 import { HttpRequestHelper } from "../utils/httpRequestHelper";
 import { Logger } from "../utils/logger";
@@ -34,7 +31,10 @@ export class RunCommand extends TestCommandBase {
         const restart = this.getOptionBoolean("restart");
 
         const data = RequestFile.fetch(path.join(dataDir, filename));
-        data.variables = this.loadVariables(data.id!, data.variables, restart);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const testSpecId = data.id!;
+
+        data.variables = this.loadVariables(testSpecId, data.variables, restart);
 
         if (data.authentication && data.authentication.apiKeys) {
             data.authentication.apiKeys = new Map(Object.entries(data.authentication.apiKeys));
@@ -48,11 +48,11 @@ export class RunCommand extends TestCommandBase {
             )
                 .then(() => {
                     Logger.log("completed all the steps");
-                    this.dumpVariables(data.id!, data.variables);
+                    this.dumpVariables(testSpecId, data.variables);
                 })
                 .catch((rejection) => {
                     console.error(`Fail to run all the steps, ${rejection}`);
-                    this.dumpVariables(data.id!, data.variables);
+                    this.dumpVariables(testSpecId, data.variables);
                 });
         }
     }
