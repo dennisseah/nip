@@ -3,7 +3,7 @@
 import { WebResponse } from "./requestUtils";
 
 export class Validator {
-    static validate(
+    public static validate(
         obj: WebResponse,
         type: string,
         parameters: any,

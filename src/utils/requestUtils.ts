@@ -13,7 +13,7 @@ export class WebResponse {
     }
 }
 export class RequestUtils {
-    static async sendRequest(
+    public static async sendRequest(
         name: string,
         options: https.RequestOptions,
         payload?: string | undefined
@@ -46,7 +46,7 @@ export class RequestUtils {
             req.end();
         });
     }
-    static createOptions(
+    public static createOptions(
         url: URL,
         method: string,
         headers?: Map<string, string | number>,

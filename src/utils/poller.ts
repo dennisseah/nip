@@ -3,7 +3,7 @@
 import { JSONPath, JSONPathOptions } from "jsonpath-plus";
 
 export class Poller {
-    static poll(result: any, type: string, path?: string): boolean {
+    public static poll(result: any, type: string, path?: string): boolean {
         if (type === "bool_true") {
             const val = this.getElement(result, path);
             return val.length === 1 && val[0] === true;

@@ -9,7 +9,7 @@ import * as path from "path";
 export class RequestFile {
     private static schema = JSONUtils.fromFile(path.join(".", "schema.json"));
 
-    static fetch(path: string): Request {
+    public static fetch(path: string): Request {
         const data = this.fetchData(path) as Request;
         const error = SchemaValidator.validate(this.schema, data);
 

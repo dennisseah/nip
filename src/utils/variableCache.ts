@@ -6,16 +6,16 @@ import { JSONUtils } from "./jsonUtils";
 import { Logger } from "./logger";
 
 export class VariableCache {
-    static FOLDER_NAME = ".nip_cache";
+    public static FOLDER_NAME = ".nip_cache";
 
-    static list(): string[] {
+    public static list(): string[] {
         const dir = this.getCacheDirectory();
         if (fs.existsSync(dir)) {
             return fs.readdirSync(dir, { withFileTypes: true }).map((d) => d.name);
         }
         return [];
     }
-    static fetch(id: string | undefined): Map<string, string> {
+    public static fetch(id: string | undefined): Map<string, string> {
         if (id) {
             this.createCacheDirectory();
             const fp = this.getCacheFilename(id);
@@ -26,7 +26,7 @@ export class VariableCache {
         }
         return new Map<string, string>();
     }
-    static clear(id: string | undefined): boolean {
+    public static clear(id: string | undefined): boolean {
         if (id) {
             const fp = this.getCacheFilename(id);
             if (fs.existsSync(fp)) {
@@ -36,10 +36,10 @@ export class VariableCache {
         }
         return false;
     }
-    static clearAll(): void {
+    public static clearAll(): void {
         fs.rmdirSync(this.getCacheDirectory(), { recursive: true });
     }
-    static store(id: string | undefined, data: Map<string, string>): void {
+    public static store(id: string | undefined, data: Map<string, string>): void {
         if (id) {
             this.createCacheDirectory();
             const fp = this.getCacheFilename(id);

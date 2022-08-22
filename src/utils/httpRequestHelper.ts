@@ -2,7 +2,7 @@
 import { RequestUtils, WebResponse } from "./requestUtils";
 
 export class HttpRequestHelper {
-    static makeGETRequest(
+    public static makeGETRequest(
         name: string,
         url: URL,
         headers?: Map<string, string | number>,
@@ -13,7 +13,7 @@ export class HttpRequestHelper {
             RequestUtils.createOptions(url, "GET", headers, parameters)
         );
     }
-    static makeDELETERequest(
+    public static makeDELETERequest(
         name: string,
         url: URL,
         headers?: Map<string, string | number>,
@@ -24,7 +24,7 @@ export class HttpRequestHelper {
             RequestUtils.createOptions(url, "DELETE", headers, parameters)
         );
     }
-    static makePUTRequest(
+    public static makePUTRequest(
         name: string,
         url: URL,
         payload: string | undefined,
@@ -37,7 +37,7 @@ export class HttpRequestHelper {
             payload
         );
     }
-    static makePOSTRequest(
+    public static makePOSTRequest(
         name: string,
         url: URL,
         payload: string | undefined,

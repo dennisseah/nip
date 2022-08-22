@@ -1,5 +1,5 @@
 export class RandomGenerator {
-    static colors = [
+    public static colors = [
         "aqua",
         "azure",
         "beige",
@@ -45,7 +45,7 @@ export class RandomGenerator {
         "yellow",
     ];
 
-    static generate(name: string): string | null {
+    public static generate(name: string): string | null {
         if (name === "randomInt") {
             return this.randomInt().toString();
         }
@@ -54,10 +54,10 @@ export class RandomGenerator {
         }
         return null;
     }
-    static randomInt(min = 1, max = 100): number {
+    public static randomInt(min = 1, max = 100): number {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    static randomColor(): string {
+    public static randomColor(): string {
         const len = this.colors.length;
         return this.colors[this.randomInt(0, len - 1)];
     }
