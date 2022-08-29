@@ -20,10 +20,7 @@ describe("Validator unit test", () => {
                 path: path,
                 expectedVal: "test1",
             })
-        ).to.throw(
-            Error,
-            "StringValueEq validation failed. expected test1 but got test"
-        );
+        ).to.throw(Error, "StringValueEq validation failed. expected test1 but got test");
     });
     it("numericValueEq test", () => {
         const data = {
@@ -43,10 +40,7 @@ describe("Validator unit test", () => {
                 path: path,
                 expectedVal: 2,
             })
-        ).to.throw(
-            Error,
-            "numericValueEq validation failed. expected 2 but got 1"
-        );
+        ).to.throw(Error, "numericValueEq validation failed. expected 2 but got 1");
     });
     it("booleanValueEq test", () => {
         const data = {
@@ -66,10 +60,7 @@ describe("Validator unit test", () => {
                 path: path,
                 expectedVal: false,
             })
-        ).to.throw(
-            Error,
-            "booleanValueEq validation failed. expected false but got true"
-        );
+        ).to.throw(Error, "booleanValueEq validation failed. expected false but got true");
     });
 
     it("httpStatusCodeEq test", () => {
@@ -81,10 +72,7 @@ describe("Validator unit test", () => {
             Validator.validate(new WebResponse(404, {}), "httpStatusCodeEq", {
                 expectedVal: 200,
             })
-        ).to.throw(
-            Error,
-            "httpStatusCodeEq validation failed. expected 200 but got 404"
-        );
+        ).to.throw(Error, "httpStatusCodeEq validation failed. expected 200 but got 404");
     });
     it("arraySize test", () => {
         const data = { items: [0, 1] };
@@ -150,13 +138,9 @@ describe("Validator unit test", () => {
         });
 
         expect(() =>
-            Validator.validate(
-                new WebResponse(200, { values: null }),
-                "exist",
-                {
-                    path: "$.[values]",
-                }
-            )
+            Validator.validate(new WebResponse(200, { values: null }), "exist", {
+                path: "$.[values]",
+            })
         ).to.throw(Error, "exist validation failed.");
 
         expect(() =>
@@ -175,27 +159,14 @@ describe("Validator unit test", () => {
         });
 
         expect(() =>
-            Validator.validate(
-                new WebResponse(200, { values: 1 }),
-                "existNull",
-                {
-                    path: "$.[values]",
-                }
-            )
+            Validator.validate(new WebResponse(200, { values: 1 }), "existNull", {
+                path: "$.[values]",
+            })
         ).to.throw(Error, "existNull validation failed.");
 
-        expect(() =>
-            Validator.validate(
-                new WebResponse(200, { value: null }),
-                "existNull",
-                {
-                    path: "$.[values]",
-                }
-            )
-        ).to.throw(
-            Error,
-            "validation function failed, path, $.[values] does not resolve to any value"
-        );
+        Validator.validate(new WebResponse(200, { value: null }), "existNull", {
+            path: "$.[values]",
+        });
     });
     it("invalid validation type test", () => {
         const data = { values: 1 };

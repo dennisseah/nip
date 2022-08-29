@@ -8,12 +8,12 @@ steps:
     validations:
       - type: httpStatusCodeEq
         parameters:
-          expectedVal: 202
+          expectedVal: 201
       - type: exist
         parameters:
-          path: $.jobId
+          path: $.id
     variables:
-      jobId: $.jobId
+      jobId: $.id
   - name: 'Asset: Get New Job'
     request:
       url: '{{host}}/jobs/{{jobId}}'
@@ -24,7 +24,7 @@ steps:
           expectedVal: 200
       - type: stringValueEq
         parameters:
-          path: $.jobId
+          path: $.id
           expectedVal: '{{jobId}}'
       - type: exist
         parameters:
@@ -64,7 +64,7 @@ teardowns:
           expectedVal: 404
 authentication:
   apiKeys:
-    Authorization: '{{asyncdemo_token}}'
+    Authorization: '{{auth_token}}'
 variables:
-  host: https://localhost:7035
-id: e78b0be6-89ec-4abe-b4b0-bdc2ff9d5800
+  host: http://localhost:6060
+id: 124b9c46-e07e-49cd-88f5-a5fedc3a5a6f

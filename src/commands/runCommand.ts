@@ -75,9 +75,8 @@ export class RunCommand extends TestCommandBase {
         } catch (ex) {
             if (ignoreError) {
                 return (ex as Error).message;
-            } else {
-                throw ex;
             }
+            throw ex;
         }
     }
     private async performStep(item: request.RequestItem, data: request.Request): Promise<void> {

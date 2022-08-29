@@ -15,9 +15,7 @@ const registerSubCommands = (mainCmd: Command): void => {
 
     [...mapCommands.keys()].forEach((name) => {
         const cmd = mapCommands.get(name);
-        if (cmd) {
-            cmd.register(name, mainCmd);
-        }
+        cmd && cmd.register(name, mainCmd);
     });
 };
 

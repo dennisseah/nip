@@ -13,18 +13,18 @@
                 {
                     "type": "httpStatusCodeEq",
                     "parameters": {
-                        "expectedVal": 202
+                        "expectedVal": 201
                     }
                 },
                 {
                     "type": "exist",
                     "parameters": {
-                        "path": "$.jobId"
+                        "path": "$.id"
                     }
                 }
             ],
             "variables": {
-                "jobId": "$.jobId"
+                "jobId": "$.id"
             }
         },
         {
@@ -72,7 +72,7 @@
                 {
                     "type": "stringValueEq",
                     "parameters": {
-                        "path": "$.jobId",
+                        "path": "$.id",
                         "expectedVal": "{{jobId}}"
                     }
                 },
@@ -128,7 +128,7 @@
                 {
                     "type": "httpStatusCodeEq",
                     "parameters": {
-                        "expectedVal": 204
+                        "expectedVal": 200
                     }
                 }
             ]
@@ -151,7 +151,7 @@
     ],
     "authentication": {
         "apiKeys": {
-            "Authorization": "{{asyncdemo_token}}"
+            "Authorization": "{{auth_token}}"
         }
     },
     "variables": {

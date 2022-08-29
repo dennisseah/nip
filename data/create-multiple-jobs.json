@@ -17,18 +17,18 @@
                 {
                     "type": "httpStatusCodeEq",
                     "parameters": {
-                        "expectedVal": 202
+                        "expectedVal": 201
                     }
                 },
                 {
                     "type": "exist",
                     "parameters": {
-                        "path": "$.jobId"
+                        "path": "$.id"
                     }
                 }
             ],
             "variables": {
-                "jobId_{{job_count}}": "$.jobId"
+                "jobId_{{job_count}}": "$.id"
             }
         },
         {
@@ -54,7 +54,7 @@
                 {
                     "type": "stringValueEq",
                     "parameters": {
-                        "path": "$.jobId",
+                        "path": "$.id",
                         "expectedVal": "{{fetch_jobId}}"
                     }
                 },
@@ -116,7 +116,7 @@
                 {
                     "type": "httpStatusCodeEq",
                     "parameters": {
-                        "expectedVal": 204
+                        "expectedVal": 200
                     }
                 }
             ]
@@ -146,12 +146,12 @@
     ],
     "authentication": {
         "apiKeys": {
-            "Authorization": "{{asyncdemo_token}}"
+            "Authorization": "{{auth_token}}"
         }
     },
     "variables": {
-        "host": "https://localhost:7035",
+        "host": "http://localhost:6060",
         "job_count": "0"
     },
-    "id": "580e6b50-a77f-477e-99a4-1600b09ddee8"
+    "id": "4c352f31-d76c-42e1-91f7-d562523dfd55"
 }

@@ -1,89 +1,89 @@
+---
 steps:
-  - name: 'Act: Create Jobs'
-    request:
-      url: '{{host}}/jobs'
-      method: POST
-      json:
-        description: job {{$randomColor}}-{{$randomInt}}
-    repeat:
-      counterVariable: job_count
-      total: 10
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 202
-      - type: exist
-        parameters:
-          path: $.jobId
-    variables:
-      jobId_{{job_count}}: $.jobId
-  - name: 'Asset: Get New Jobs'
-    request:
-      url: '{{host}}/jobs/{{fetch_jobId}}'
-      method: GET
-    preRequestVariables:
-      fetch_jobId: '{{jobId_{{job_count}}}}'
-    repeat:
-      counterVariable: job_count
-      total: 10
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 200
-      - type: stringValueEq
-        parameters:
-          path: $.jobId
-          expectedVal: '{{fetch_jobId}}'
-      - type: exist
-        parameters:
-          path: $.creationTime
-      - type: exist
-        parameters:
-          path: $.description
-      - type: existNull
-        parameters:
-          path: $.processId
-      - type: existNull
-        parameters:
-          path: $.processStartTime
-      - type: existNull
-        parameters:
-          path: $.processEndTime
-      - type: booleanValueEq
-        parameters:
-          path: $.isComplete
-          expectedVal: false
+- name: 'Act: Create Jobs'
+  request:
+    url: "{{host}}/jobs"
+    method: POST
+    json:
+      description: job {{$randomColor}}-{{$randomInt}}
+  repeat:
+    counterVariable: job_count
+    total: 10
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 201
+  - type: exist
+    parameters:
+      path: "$.id"
+  variables:
+    jobId_{{job_count}}: "$.id"
+- name: 'Asset: Get New Jobs'
+  request:
+    url: "{{host}}/jobs/{{fetch_jobId}}"
+    method: GET
+  preRequestVariables:
+    fetch_jobId: "{{jobId_{{job_count}}}}"
+  repeat:
+    counterVariable: job_count
+    total: 10
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 200
+  - type: stringValueEq
+    parameters:
+      path: "$.id"
+      expectedVal: "{{fetch_jobId}}"
+  - type: exist
+    parameters:
+      path: "$.creationTime"
+  - type: exist
+    parameters:
+      path: "$.description"
+  - type: existNull
+    parameters:
+      path: "$.processId"
+  - type: existNull
+    parameters:
+      path: "$.processStartTime"
+  - type: existNull
+    parameters:
+      path: "$.processEndTime"
+  - type: booleanValueEq
+    parameters:
+      path: "$.isComplete"
+      expectedVal: false
 teardowns:
-  - name: 'Teardown: Delete jobs'
-    request:
-      url: '{{host}}/jobs/{{fetch_jobId}}'
-      method: DELETE
-    preRequestVariables:
-      fetch_jobId: '{{jobId_{{job_count}}}}'
-    repeat:
-      counterVariable: job_count
-      total: 10
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 204
-  - name: 'Teardown: Confirm jobs deletion'
-    request:
-      url: '{{host}}/jobs/{{fetch_jobId}}'
-      method: GET
-    preRequestVariables:
-      fetch_jobId: '{{jobId_{{job_count}}}}'
-    repeat:
-      counterVariable: job_count
-      total: 10
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 404
+- name: 'Teardown: Delete jobs'
+  request:
+    url: "{{host}}/jobs/{{fetch_jobId}}"
+    method: DELETE
+  preRequestVariables:
+    fetch_jobId: "{{jobId_{{job_count}}}}"
+  repeat:
+    counterVariable: job_count
+    total: 10
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 200
+- name: 'Teardown: Confirm jobs deletion'
+  request:
+    url: "{{host}}/jobs/{{fetch_jobId}}"
+    method: GET
+  preRequestVariables:
+    fetch_jobId: "{{jobId_{{job_count}}}}"
+  repeat:
+    counterVariable: job_count
+    total: 10
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 404
 authentication:
   apiKeys:
-    Authorization: '{{asyncdemo_token}}'
+    Authorization: "{{auth_token}}"
 variables:
-  host: https://localhost:7035
+  host: http://localhost:6060
   job_count: '0'
-id: c2c4a291-a29e-4081-b0ac-ea9cbf638055

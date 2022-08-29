@@ -12,7 +12,7 @@
             "args": ["run", "-f", "process-job.json"],
             "preLaunchTask": "tsc: build - tsconfig.json",
             "env": {
-                "asyncdemo_token": "foo"
+                "auth_token": "my-secret"
             },
             "outFiles": ["${workspaceFolder}/build/**/*.js"]
         }

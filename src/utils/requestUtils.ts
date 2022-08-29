@@ -19,7 +19,8 @@ export class RequestUtils {
         payload?: string | undefined
     ): Promise<WebResponse> {
         return new Promise<WebResponse>((resolve, reject) => {
-            const req = https.request(options, (res) => {
+            const httpLib = options.protocol && options.protocol === "https:" ? https : http;
+            const req = httpLib.request(options, (res) => {
                 const statusCode: number = this.handleResponse(res);
 
                 if (statusCode > 299) {
@@ -59,6 +60,7 @@ export class RequestUtils {
             headers.set("Content-Length", payload.length);
         }
         const options = {
+            protocol: url.protocol,
             hostname: url.hostname,
             port: url.port,
             path: url.pathname,

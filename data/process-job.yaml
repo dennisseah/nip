@@ -1,88 +1,88 @@
+---
 steps:
-  - name: 'Act: Create Job'
-    request:
-      url: '{{host}}/jobs'
-      method: POST
-      json:
-        description: job {{$randomColor}}-{{$randomInt}}
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 202
-      - type: exist
-        parameters:
-          path: $.jobId
-    variables:
-      jobId: $.jobId
-  - name: 'Act: Start process for job'
-    request:
-      url: '{{host}}/jobs/{{jobId}}/process'
-      method: POST
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 202
-      - type: exist
-        parameters:
-          path: $.processId
-    variables:
-      processId: $.processId
-  - name: 'Asset: Get New Job'
-    request:
-      url: '{{host}}/jobs/{{jobId}}'
-      method: GET
-    poll:
-      type: bool_true
-      path: $.isComplete
-      durationInSeconds: 60
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 200
-      - type: stringValueEq
-        parameters:
-          path: $.jobId
-          expectedVal: '{{jobId}}'
-      - type: stringValueEq
-        parameters:
-          path: $.processId
-          expectedVal: '{{processId}}'
-      - type: exist
-        parameters:
-          path: $.creationTime
-      - type: exist
-        parameters:
-          path: $.description
-      - type: exist
-        parameters:
-          path: $.processStartTime
-      - type: exist
-        parameters:
-          path: $.processEndTime
-      - type: booleanValueEq
-        parameters:
-          path: $.isComplete
-          expectedVal: true
+- name: 'Act: Create Job'
+  request:
+    url: "{{host}}/jobs"
+    method: POST
+    json:
+      description: job {{$randomColor}}-{{$randomInt}}
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 201
+  - type: exist
+    parameters:
+      path: "$.id"
+  variables:
+    jobId: "$.id"
+- name: 'Act: Start process for job'
+  request:
+    url: "{{host}}/jobs/{{jobId}}/process"
+    method: POST
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 202
+  - type: exist
+    parameters:
+      path: "$.processId"
+  variables:
+    processId: "$.processId"
+- name: 'Asset: Get New Job'
+  request:
+    url: "{{host}}/jobs/{{jobId}}"
+    method: GET
+  poll:
+    type: bool_true
+    path: "$.isComplete"
+    durationInSeconds: 60
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 200
+  - type: stringValueEq
+    parameters:
+      path: "$.id"
+      expectedVal: "{{jobId}}"
+  - type: stringValueEq
+    parameters:
+      path: "$.processId"
+      expectedVal: "{{processId}}"
+  - type: exist
+    parameters:
+      path: "$.creationTime"
+  - type: exist
+    parameters:
+      path: "$.description"
+  - type: exist
+    parameters:
+      path: "$.processStartTime"
+  - type: exist
+    parameters:
+      path: "$.processEndTime"
+  - type: booleanValueEq
+    parameters:
+      path: "$.isComplete"
+      expectedVal: true
 teardowns:
-  - name: 'Teardown: Delete job'
-    request:
-      url: '{{host}}/jobs/{{jobId}}'
-      method: DELETE
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 204
-  - name: 'Teardown: Confirm job deletion'
-    request:
-      url: '{{host}}/jobs/{{jobId}}'
-      method: GET
-    validations:
-      - type: httpStatusCodeEq
-        parameters:
-          expectedVal: 404
+- name: 'Teardown: Delete job'
+  request:
+    url: "{{host}}/jobs/{{jobId}}"
+    method: DELETE
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 200
+- name: 'Teardown: Confirm job deletion'
+  request:
+    url: "{{host}}/jobs/{{jobId}}"
+    method: GET
+  validations:
+  - type: httpStatusCodeEq
+    parameters:
+      expectedVal: 404
 authentication:
   apiKeys:
-    Authorization: '{{asyncdemo_token}}'
+    Authorization: "{{auth_token}}"
 variables:
   host: https://localhost:7035
-id: 9f607569-9016-4bd9-baf6-726286350fbc

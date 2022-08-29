@@ -17,11 +17,6 @@ export class RequestFile {
             throw new Error(`Schema error: ${error}`);
         }
 
-        if (path.endsWith(".json")) {
-            JSONUtils.toFile(data, path);
-        } else {
-            YAMLUtils.toFile(data, path);
-        }
         return data;
     }
 
@@ -30,9 +25,17 @@ export class RequestFile {
             const data = path.endsWith(".json")
                 ? JSONUtils.fromFile(path)
                 : YAMLUtils.fromFile(path);
+
             if (!data.id) {
                 data.id = uuidv4();
+
+                if (path.endsWith(".json")) {
+                    JSONUtils.toFile(data, path);
+                } else {
+                    YAMLUtils.toFile(data, path);
+                }
             }
+
             return data;
         }
         throw new Error(`Invalid file extension ${path}`);
